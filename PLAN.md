@@ -301,11 +301,12 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
 
 **Open / carried forward**
 
-- **The home chat list is not confirmed working.** With a real chat present it still read
-  "Nothing here yet". `buildHomeSessionRecords` required every session to belong to a
-  registered project — impossible in a project-less app — and that filter was removed, but
-  the session index is *also* scoped through the focused server context and that path is
-  unverified. **This is the first thing to check next.**
+- ~~The home chat list is not confirmed working.~~ **Fixed and verified.**
+  `buildHomeSessionRecords` required every session to belong to a registered project,
+  which no chat can satisfy. The lingering "Nothing here yet" after that fix turned out to
+  be a stale module that had not hot-reloaded, not a second bug — the session index is
+  server-wide, not directory-scoped. Chats now list under "Today", pinning works and
+  survives a reload. Chats no longer show "chats" as a project name.
 - Terminology: the UI still says "session", not "chat", in ~185 strings across 65 locales.
 - `resources/opencode-cli` still ships upstream's CLI binary; a chat-only app probably
   does not need it at all.
