@@ -274,6 +274,8 @@ declare global {
     api?: {
       setTitlebar?: (theme: { mode: "light" | "dark"; scheme?: "system" | "light" | "dark" }) => Promise<void>
       exportDebugLogs?: () => Promise<string>
+      /** Chat-only fork: the fixed directory all chats live in. Desktop only. */
+      chatsDirectory?: string
     }
   }
 }

@@ -208,7 +208,13 @@ export const { use: useTabs, provider: TabsProvider } = createSimpleContext({
       },
       async newDraft(draft: Omit<DraftTab, "type" | "draftID">, prompt?: string, model?: PromptModel) {
         const draftID = uuid()
-        const tab = { type: "draft" as const, draftID, ...draft }
+        // Chat-only fork: every chat lives in one fixed directory. Callers still
+        // pass whatever directory they have to hand (the active session's, a
+        // project worktree, sdk().directory); this is the single chokepoint that
+        // pins them all to the chats dir. Optional-chained because the web build
+        // has no `window.api`, and there it falls back to the caller's value.
+        const directory = window.api?.chatsDirectory ?? draft.directory
+        const tab = { type: "draft" as const, draftID, ...draft, directory }
         memory.ensure(tabKey(tab), "prompt", () => createDraftPromptSession(draftID, { prompt, model }))
         await startTransition(() => {
           setStore(

@@ -57,6 +57,8 @@ export type ElectronAPI = {
   getDisplayBackend: () => Promise<LinuxDisplayBackend | null>
   setDisplayBackend: (backend: LinuxDisplayBackend | null) => Promise<void>
   checkAppExists: (appName: string) => Promise<boolean>
+  /** Chat-only fork: the fixed directory all chats live in. */
+  chatsDirectory: string
   resolveAppPath: (appName: string) => Promise<string | null>
   storeGet: (name: string, key: string) => Promise<string | null>
   storeSet: (name: string, key: string, value: string) => Promise<void>

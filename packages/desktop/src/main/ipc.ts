@@ -4,6 +4,7 @@ import { basename, join } from "node:path"
 import { app, BrowserWindow, clipboard, dialog, ipcMain, shell } from "electron"
 import type { IpcMainEvent, IpcMainInvokeEvent } from "electron"
 import type { DesktopMenuAction } from "@opencode-ai/app/desktop-menu"
+import { chatsDirectory } from "./chats-directory"
 import { parseDesktopNativeBundle, type DesktopNativeBundle } from "@opencode-ai/app/i18n/desktop-native"
 
 import type { FatalRendererError, ServerReadyData, TitlebarTheme } from "../preload/types"
@@ -69,6 +70,11 @@ export function registerIpcHandlers(deps: Deps) {
   ipcMain.handle("set-default-server-url", (_event: IpcMainInvokeEvent, url: string | null) =>
     deps.setDefaultServerUrl(url),
   )
+  // Chat-only fork: the fixed chats directory, exposed synchronously so the
+  // renderer has it before the first draft tab is created.
+  ipcMain.on("chats-directory-sync", (event) => {
+    event.returnValue = chatsDirectory()
+  })
   ipcMain.handle("is-first-launch-onboarding-pending", () => deps.isFirstLaunchOnboardingPending())
   ipcMain.handle("finish-first-launch-onboarding", (_event: IpcMainInvokeEvent, createDefaultProject: boolean) =>
     deps.finishFirstLaunchOnboarding(createDefaultProject),

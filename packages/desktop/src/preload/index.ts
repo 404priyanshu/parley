@@ -11,6 +11,9 @@ const updaterHandler = (_: unknown, state: UpdaterState) => {
 }
 
 const api: ElectronAPI = {
+  // Chat-only fork: the single directory every chat lives in. Resolved once at
+  // preload time; the sandboxed preload has no fs access, so this goes over IPC.
+  chatsDirectory: ipcRenderer.sendSync("chats-directory-sync") as string,
   killSidecar: () => ipcRenderer.invoke("kill-sidecar"),
   installCli: () => ipcRenderer.invoke("install-cli"),
   awaitInitialization: () => ipcRenderer.invoke("await-initialization"),
