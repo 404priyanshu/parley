@@ -22,7 +22,6 @@ const layer = Layer.effect(
     // so it can depend on bootstrap without importing this implementation graph.
     const config = yield* Config.Service
     const format = yield* Format.Service
-    const lsp = yield* LSP.Service
     const plugin = yield* Plugin.Service
     const project = yield* Project.Service
     const shareNext = yield* ShareNext.Service
@@ -38,8 +37,11 @@ const layer = Layer.effect(
       yield* plugin.init()
       // Each service self-manages its own slow work via Effect.forkScoped against
       // its per-instance state scope. We just await materialization here.
+      // Chat-only fork: `lsp` is deliberately absent from this list, so no
+      // language servers are ever spawned. The LSP service itself stays wired
+      // (the instance status endpoint still resolves it) but is never init'd.
       yield* Effect.forEach(
-        [lsp, shareNext, format, vcs, snapshot, project],
+        [shareNext, format, vcs, snapshot, project],
         (s) => s.init().pipe(Effect.catchCause((cause) => Effect.logWarning("init failed", { cause }))),
         { concurrency: "unbounded", discard: true },
       ).pipe(Effect.withSpan("InstanceBootstrap.init"))

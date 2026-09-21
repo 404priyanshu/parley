@@ -5,30 +5,18 @@ import { define } from "./internal"
 import { Effect } from "effect"
 import { AgentV2 } from "../agent"
 import { Global } from "../global"
-import { Location } from "../location"
 import { PermissionV2 } from "../permission"
 
 const TRUNCATION_GLOB = path.join(Global.Path.data, "tool-output", "*")
-const BUILD_SYSTEM =
-  "You are an AI coding agent. Help the user accomplish software engineering tasks by inspecting the workspace, making targeted changes, and using tools according to the configured permissions."
+const CHAT_SYSTEM = `You are a helpful AI assistant. You are having a conversation with the user.
 
-const PROMPT_EXPLORE = `You are a file search specialist. You excel at thoroughly navigating and exploring codebases.
+You have no tools and no access to the user's files, terminal, or system. You cannot read or
+write files, run commands, browse the web, or take any action outside this conversation. If the
+user asks for something that would require those abilities, say plainly that you cannot do it
+here, and help as best you can with what you know.
 
-Your strengths:
-- Rapidly finding files using glob patterns
-- Searching code and text with powerful regex patterns
-- Reading and analyzing file contents
-
-Guidelines:
-- Use Glob for broad file pattern matching
-- Use Grep for searching file contents with regex
-- Use Read when you know the specific file path you need to read
-- Adapt your search approach based on the thoroughness level specified by the caller
-- Return file paths as absolute paths in your final response
-- For clear communication, avoid using emojis
-- Do not create any files, or run bash commands that modify the user's system state in any way
-
-Complete the user's search request efficiently and report your findings clearly.`
+Answer directly and honestly. Ask a clarifying question when the request is genuinely ambiguous.
+When you are not sure about something, say so rather than guessing.`
 
 const PROMPT_COMPACTION = `You are a context summarization agent. You are given a conversation between a user and an agent. Your goal is to produce a structured summary matching the format specified so another coding agent can continue the work.
 
@@ -96,8 +84,6 @@ Rules:
 export const Plugin = define({
   id: "agent",
   effect: Effect.fn(function* (ctx) {
-    const location = yield* Location.Service
-    const worktree = location.directory
     const whitelistedDirs = [TRUNCATION_GLOB, path.join(Global.Path.tmp, "*")]
     const readonlyExternalDirectory: PermissionV2.Ruleset = [
       { action: "external_directory", resource: "*", effect: "ask" },
@@ -116,86 +102,36 @@ export const Plugin = define({
       { action: "read", resource: "*.env.*", effect: "ask" },
       { action: "read", resource: "*.env.example", effect: "allow" },
     ]
+    /** Chat-only fork: no agent is permitted to invoke any tool. */
+    const denyAll = () => PermissionV2.merge(defaults, [{ action: "*", resource: "*", effect: "deny" }])
 
     yield* ctx.agent.transform((draft) => {
       draft.update(AgentV2.defaultID, (item) => {
-        item.description = "The default agent. Executes tools based on configured permissions."
-        item.system ??= BUILD_SYSTEM
+        item.description = "Chat. Conversation only, no tools."
+        item.system ??= CHAT_SYSTEM
         item.mode = "primary"
-        item.permissions.push(
-          ...PermissionV2.merge(defaults, [
-            { action: "question", resource: "*", effect: "allow" },
-            { action: "plan_enter", resource: "*", effect: "allow" },
-          ]),
-        )
-      })
-
-      draft.update(AgentV2.ID.make("plan"), (item) => {
-        item.description = "Plan mode. Disallows all edit tools."
-        item.mode = "primary"
-        item.permissions.push(
-          ...PermissionV2.merge(defaults, [
-            { action: "question", resource: "*", effect: "allow" },
-            { action: "plan_exit", resource: "*", effect: "allow" },
-            { action: "external_directory", resource: path.join(Global.Path.data, "plans", "*"), effect: "allow" },
-            { action: "edit", resource: "*", effect: "deny" },
-            { action: "edit", resource: path.join(".opencode", "plans", "*.md"), effect: "allow" },
-            {
-              action: "edit",
-              resource: path.relative(worktree, path.join(Global.Path.data, "plans", "*.md")),
-              effect: "allow",
-            },
-          ]),
-        )
-      })
-
-      draft.update(AgentV2.ID.make("general"), (item) => {
-        item.description =
-          "General-purpose agent for researching complex questions and executing multi-step tasks. Use this agent to execute multiple units of work in parallel."
-        item.mode = "subagent"
-        item.permissions.push(...PermissionV2.merge(defaults, [{ action: "todowrite", resource: "*", effect: "deny" }]))
-      })
-
-      draft.update(AgentV2.ID.make("explore"), (item) => {
-        item.description =
-          'Fast agent specialized for exploring codebases. Use this when you need to quickly find files by patterns (eg. "src/components/**/*.tsx"), search code for keywords (eg. "API endpoints"), or answer questions about the codebase (eg. "how do API endpoints work?"). When calling this agent, specify the desired thoroughness level: "quick" for basic searches, "medium" for moderate exploration, or "very thorough" for comprehensive analysis across multiple locations and naming conventions.'
-        item.system = PROMPT_EXPLORE
-        item.mode = "subagent"
-        item.permissions.push(
-          ...PermissionV2.merge(
-            defaults,
-            [
-              { action: "*", resource: "*", effect: "deny" },
-              { action: "grep", resource: "*", effect: "allow" },
-              { action: "glob", resource: "*", effect: "allow" },
-              { action: "webfetch", resource: "*", effect: "allow" },
-              { action: "websearch", resource: "*", effect: "allow" },
-              { action: "read", resource: "*", effect: "allow" },
-            ],
-            readonlyExternalDirectory,
-          ),
-        )
+        item.permissions.push(...denyAll())
       })
 
       draft.update(AgentV2.ID.make("compaction"), (item) => {
         item.mode = "primary"
         item.hidden = true
         item.system = PROMPT_COMPACTION
-        item.permissions.push(...PermissionV2.merge(defaults, [{ action: "*", resource: "*", effect: "deny" }]))
+        item.permissions.push(...denyAll())
       })
 
       draft.update(AgentV2.ID.make("title"), (item) => {
         item.mode = "primary"
         item.hidden = true
         item.system = PROMPT_TITLE
-        item.permissions.push(...PermissionV2.merge(defaults, [{ action: "*", resource: "*", effect: "deny" }]))
+        item.permissions.push(...denyAll())
       })
 
       draft.update(AgentV2.ID.make("summary"), (item) => {
         item.mode = "primary"
         item.hidden = true
         item.system = PROMPT_SUMMARY
-        item.permissions.push(...PermissionV2.merge(defaults, [{ action: "*", resource: "*", effect: "deny" }]))
+        item.permissions.push(...denyAll())
       })
     })
   }),

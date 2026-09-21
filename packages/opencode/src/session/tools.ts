@@ -38,6 +38,20 @@ const SUPPORTED_MCP_RESOURCE_ATTACHMENT_MIMES = new Set([
   "image/webp",
 ])
 
+/**
+ * Chat-only fork: no tools are ever handed to the model.
+ *
+ * This is the single chokepoint where the tool map sent to the provider is
+ * assembled — built-in tools, filesystem/plugin tools and MCP tools all land
+ * here. Emptying the registry's built-in list is not sufficient on its own,
+ * because plugin and MCP tools reach the model through this function without
+ * passing through that list.
+ *
+ * The upstream implementation below is left intact behind this flag so rebases
+ * against upstream stay cheap.
+ */
+const TOOLS_ENABLED: boolean = false
+
 export const resolve = Effect.fn("SessionTools.resolve")(function* (input: {
   agent: Agent.Info
   model: Provider.Model
@@ -48,6 +62,7 @@ export const resolve = Effect.fn("SessionTools.resolve")(function* (input: {
   promptOps: TaskPromptOps
 }) {
   const tools: Record<string, AITool> = {}
+  if (!TOOLS_ENABLED) return tools
   const run = yield* EffectBridge.make()
   const plugin = yield* Plugin.Service
   const permission = yield* Permission.Service

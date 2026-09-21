@@ -124,37 +124,61 @@ Vendored sub-licenses to preserve: `packages/ui/LICENSE`, `packages/docs/LICENSE
 
 ## Phases
 
-### Phase 1 — chat-only mode
+### Phase 1 — chat-only mode ✅ done
 
 A single built-in `chat` agent with every tool denied, a plain chat system prompt, and
 no AGENTS.md / LSP / project-context loading.
 
-The permission model already supports this: `compaction`, `title` and `summary` agents
-are defined today with `{ action: "*", resource: "*", effect: "deny" }`. Phase 1 mostly
-reuses that pattern rather than inventing a new one.
+**Correction to the original plan.** The pre-implementation file list targeted
+`packages/core` (the v2, Effect-based stack). That was wrong about what actually runs:
+the desktop sidecar serves **v1** code in `packages/opencode`. `/agent` is handled by
+`@/agent/agent`, and the chat turn is assembled by `@/session/prompt` → `@/session/tools`
+→ `@/session/llm/request`. `packages/core` holds a parallel v2 implementation that the
+desktop app does not currently reach.
 
-- [ ] Add a `chat` agent (`mode: "primary"`, plain chat system prompt, `*/*` denied).
-- [ ] Make `chat` the default and the only user-selectable agent; drop `build`, `plan`,
-      `general`, `explore` from the selectable set. Keep `title` / `summary` /
-      `compaction` (hidden) — session titling depends on them.
-- [ ] Stop registering built-in tools.
-- [ ] Stop loading AGENTS.md, LSP and project/system context.
+Both were changed: v1 because it is what runs today, v2 so the fork stays correct as
+upstream migrates. Only the v1 edits affect runtime behaviour right now.
 
-**Files expected to change**
+**Files changed — v1 (`packages/opencode`), the live path**
 
 | File | Change |
 |---|---|
-| `packages/core/src/plugin/agent.ts` | The main one. Defines `build`/`plan`/`general`/`explore`/`compaction`/`title`/`summary` and their permission rulesets. Add `chat`; remove or hide the coding agents. |
-| `packages/core/src/agent.ts` | `defaultID = ID.make("build")` → `"chat"`; the `resolve`/`select` fallback at ~L73 also hardcodes `build`. |
-| `packages/core/src/tool/builtins.ts` | Single chokepoint listing the 12 built-in tool nodes (bash, edit, read, write, glob, grep, webfetch, websearch, skill, todowrite, apply-patch, question). Reduce to an empty `deps` list. |
-| `packages/core/src/tool/registry.ts` | Verify materialization degrades cleanly to zero tool definitions. |
-| `packages/core/src/instruction-context.ts` | AGENTS.md discovery (`targets: ["AGENTS.md"]`, global `AGENTS.md`). Disable. |
-| `packages/core/src/system-context/builtins.ts` | Injects `<env>` (cwd, workspace root, git repo, platform) into the system prompt. Strip to date-only. |
-| `packages/core/src/config/lsp.ts` | LSP config surface — disable. |
-| `packages/opencode/src/lsp/*` | LSP client/server/launch; stop starting language servers. |
-| `packages/core/src/session/prompt.ts` | Prompt assembly — ensure the plain chat prompt is used. |
-| `packages/opencode/src/session/prompt/*.txt` | Per-model coding prompts (`anthropic.txt`, `gpt.txt`, `beast.txt`, …). Add/route to a plain chat prompt. |
-| `packages/core/src/plugin/skill/*` | Skills are tool-backed; disable. |
+| `src/agent/agent.ts` | Replaced `build`/`plan`/`general`/`explore` with a single `chat` agent (`mode: primary`, `"*": "deny"`, `prompt: PROMPT_CHAT`). Kept `compaction`/`title`/`summary` hidden — session titling needs them. Default-agent sort fallback `"build"` → `"chat"`. |
+| `src/agent/prompt/chat.txt` | **New.** Plain conversational system prompt. Selected because `src/session/llm/request.ts` uses `agent.prompt` when set, otherwise the per-model coding prompts — so no `session/prompt/*.txt` edits were needed. |
+| `src/session/tools.ts` | **The airtight chokepoint.** `SessionTools.resolve` builds the tool map handed to the provider; built-in, filesystem/plugin and MCP tools all converge here. Gated behind `TOOLS_ENABLED = false`. |
+| `src/tool/registry.ts` | `builtin: []`. Permission rules gate *invocation*, not *advertisement*, so the list itself had to be emptied. Removed the orphaned `questionEnabled`. |
+| `src/session/instruction.ts` | AGENTS.md / CLAUDE.md / CONTEXT.md discovery (global + every ancestor dir + `config.instructions`, including remote URLs) gated behind `INSTRUCTIONS_ENABLED = false`. |
+| `src/session/system.ts` | Dropped the `<env>` block's working directory, worktree root and git status. Model identity and date remain. |
+| `src/project/bootstrap.ts` | Removed `lsp` from the init list, so no language servers spawn. The LSP service stays wired — the instance status endpoint still resolves it. |
+
+**Files changed — v2 (`packages/core`), not yet live**
+
+| File | Change |
+|---|---|
+| `src/plugin/agent.ts` | Same substitution: one `chat` agent, `denyAll()` helper, coding agents removed. |
+| `src/agent.ts` | `defaultID` `"build"` → `"chat"`; hardcoded `build` fallback now follows `defaultID`. |
+| `src/tool/builtins.ts` | Built-in tool node list emptied. |
+| `src/instruction-context.ts` | AGENTS.md loading replaced with a no-op node (export shape preserved for `system-context/builtins.ts`). |
+| `src/system-context/builtins.ts` | `<env>` block removed; date-only. |
+
+**Verified** — server run in a clean directory outside any project:
+
+- `/agent` → `chat` (visible) plus `compaction`/`title`/`summary` (hidden). No
+  `build`/`plan`/`general`/`explore`.
+- `/experimental/tool/ids` → `[]`.
+- No language-server processes spawned.
+- `tsgo --noEmit` clean for both `core` and `opencode`; `oxlint` 0 errors (the 14
+  remaining warnings are all pre-existing upstream).
+
+**Worth knowing**
+
+- Run *inside* a directory with an `.opencode` config, the server still picks up
+  config-defined agents and plugin tools from it (running in this repo surfaced
+  upstream's own `triage` / `duplicate-pr` agents and `github-*` tools). They are hidden
+  and the tool gate blocks them from reaching the model, but Phase 2's hidden chats dir
+  is what removes the exposure properly.
+- `/experimental/tool/ids` reports the *registry*, not the model-facing map. Plugin tools
+  can still appear there while `TOOLS_ENABLED` keeps them out of the conversation.
 
 ### Phase 2 — trim the UI
 
@@ -237,8 +261,8 @@ The load-bearing problem: routes and sessions are currently keyed by **directory
 
 ## Open questions
 
-- `packages/core` (v2, Effect) and `packages/opencode` (v1) both carry session/tool code.
-  Phase 1 targets `core`, but `opencode` must be checked for v1 fallback paths still
-  reachable from the desktop sidecar.
+- ~~Which of `packages/core` (v2) and `packages/opencode` (v1) the desktop actually
+  uses.~~ **Answered in Phase 1: v1 is the live path.** Keep this in mind for Phase 2 —
+  UI-adjacent server behaviour should be traced in `packages/opencode` first.
 - Many components exist in both `foo.tsx` and `foo-v2.tsx` form behind a flag. Confirm
   which generation the desktop build actually renders before deleting either.

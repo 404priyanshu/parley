@@ -14,6 +14,19 @@ import { Global } from "@opencode-ai/core/global"
 import type { MessageV2 } from "./message-v2"
 import type { MessageID } from "./schema"
 
+/**
+ * Chat-only fork: ambient instruction files are never loaded.
+ *
+ * Upstream collected AGENTS.md / CLAUDE.md / CONTEXT.md from the global config
+ * dir and from every ancestor directory up to the worktree root, plus anything
+ * listed in `config.instructions` (including remote URLs), and injected them all
+ * into the system prompt. Parley has no project context, so discovery is off.
+ *
+ * The upstream implementation is kept intact behind this flag rather than
+ * deleted, so rebases against upstream stay cheap.
+ */
+const INSTRUCTIONS_ENABLED: boolean = false
+
 function extract(messages: SessionV1.WithParts[]) {
   const paths = new Set<string>()
   for (const msg of messages) {
@@ -108,6 +121,7 @@ const layer: Layer.Layer<
     })
 
     const systemPaths = Effect.fn("Instruction.systemPaths")(function* () {
+      if (!INSTRUCTIONS_ENABLED) return new Set<string>()
       const config = yield* cfg.get()
       const ctx = yield* InstanceState.context
       const paths = new Set<string>()
@@ -153,6 +167,7 @@ const layer: Layer.Layer<
     })
 
     const system = Effect.fn("Instruction.system")(function* () {
+      if (!INSTRUCTIONS_ENABLED) return [] as string[]
       const config = yield* cfg.get()
       const paths = yield* systemPaths()
       const urls = (config.instructions ?? []).filter(

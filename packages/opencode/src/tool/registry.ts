@@ -204,8 +204,6 @@ const layer = Layer.effect(
         }
 
         yield* config.get()
-        const questionEnabled = ["app", "cli", "desktop"].includes(flags.client) || flags.enableQuestionTool
-
         const tool = yield* Effect.all({
           invalid: Tool.init(invalid),
           shell: Tool.init(shell),
@@ -228,25 +226,12 @@ const layer = Layer.effect(
 
         return {
           custom,
-          builtin: [
-            tool.invalid,
-            ...(questionEnabled ? [tool.question] : []),
-            tool.shell,
-            tool.read,
-            tool.glob,
-            tool.grep,
-            tool.edit,
-            tool.write,
-            tool.task,
-            tool.fetch,
-            tool.todo,
-            tool.search,
-            tool.skill,
-            tool.patch,
-            ...(tool.execute ? [tool.execute] : []),
-            ...(flags.experimentalLspTool ? [tool.lsp] : []),
-            ...(flags.experimentalPlanMode && flags.client === "cli" ? [tool.plan] : []),
-          ],
+          // Chat-only fork: no built-in tools are advertised to the model.
+          // Upstream listed shell/read/glob/grep/edit/write/task/fetch/todo/
+          // search/skill/patch (+ optional execute, lsp, plan) here. Permission
+          // rules alone are not enough: they gate invocation, not advertisement,
+          // so the list itself has to be empty.
+          builtin: [],
           task: tool.task,
           read: tool.read,
         }

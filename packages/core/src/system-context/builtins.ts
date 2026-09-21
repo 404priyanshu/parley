@@ -11,25 +11,11 @@ import { Global } from "../global"
 
 const builtIns = Layer.effectDiscard(
   Effect.gen(function* () {
-    const location = yield* Location.Service
     const registry = yield* SystemContextRegistry.Service
-    const environment = [
-      "<env>",
-      `  Working directory: ${location.directory}`,
-      `  Workspace root folder: ${location.project.directory}`,
-      `  Is directory a git repo: ${location.vcs?.type === "git" ? "yes" : "no"}`,
-      `  Platform: ${process.platform}`,
-      "</env>",
-    ].join("\n")
+    // Chat-only fork: the <env> block (working directory, workspace root, git
+    // status, platform) is deliberately not injected. Parley has no project
+    // context, so only the date is advertised to the model.
     const context = SystemContext.combine([
-      SystemContext.make({
-        key: SystemContext.Key.make("core/environment"),
-        codec: Schema.toCodecJson(Schema.String),
-        load: Effect.succeed(environment),
-        baseline: (environment) =>
-          ["Here is some useful information about the environment you are running in:", environment].join("\n"),
-        update: (_previous, environment) => ["The environment you are running in is now:", environment].join("\n"),
-      }),
       SystemContext.make({
         key: SystemContext.Key.make("core/date"),
         codec: Schema.toCodecJson(Schema.String),
