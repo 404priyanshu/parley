@@ -318,7 +318,7 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
 ### Phase 4 — ship 🟡 partly done
 
 - [x] **Unsigned `.dmg` builds and runs.** `OPENCODE_CHANNEL=prod` produces
-      `parley-mac-arm64.dmg` (205 MB) plus a `.zip`. The dmg mounts with `Parley.app` and
+      `parley-mac-arm64.dmg` (149 MB) plus a `.zip`. The dmg mounts with `Parley.app` and
       the Applications symlink; the bundle reports `co.parley.desktop` / "Parley" /
       `parley://` with the new icon, launches, and stores data under `co.parley.desktop`.
 - [x] Signing gated on `CSC_LINK` / `CSC_NAME` / `APPLE_TEAM_ID` being present, so a
