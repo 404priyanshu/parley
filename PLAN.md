@@ -315,7 +315,7 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
   not upstream either). Linux packaging only.
 - Pre-existing chats and settings do not migrate to the new bundle id.
 
-### Phase 4 — ship 🟡 partly done
+### Phase 4 — ship 🟡 released, unsigned
 
 - [x] **Unsigned `.dmg` builds and runs.** `OPENCODE_CHANNEL=prod` produces
       `parley-mac-arm64.dmg` (149 MB) plus a `.zip`. The dmg mounts with `Parley.app` and
@@ -332,8 +332,15 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
       and a Developer ID Application certificate. None exists on this machine
       (`security find-identity` → 0 valid identities). Nothing else is in the way — the
       config already turns signing on when the certificate is there.
-- [ ] **GitHub release.** Not cut; the branch is pushed but nothing is tagged or
-      published. The fork is public, so a release is visible to anyone.
+- [x] **GitHub release cut**: [`parley-v0.1.0`](https://github.com/404priyanshu/parley/releases/tag/parley-v0.1.0),
+      public, with `parley-mac-arm64.dmg` attached. Uploaded asset verified against the
+      local build by size and sha256
+      (`c2fc9681107779f627fd0dccce46e675e49e79e017f30afd54104da58a87aa99`).
+      Tagged `parley-v0.1.0` rather than `v0.1.0`: the fork inherited upstream's tags, so
+      plain semver tags up to `v1.18.31` are already taken. Keep the `parley-` prefix.
+- [ ] **Auto-update.** The release carries only the `.dmg`. electron-updater also needs
+      `latest-mac.yml` and the `.zip` (both are produced in `dist/`), and update payloads
+      must be signed to validate — so updates stay off until there is a certificate.
 - [ ] **Demo GIF.** Not produced. A useful one needs a clean packaged window with a
       working provider; the available captures showed either the dev build's DEV badge
       and perf bar, or a provider error, and neither belongs in a README.
