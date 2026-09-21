@@ -26,14 +26,41 @@ What's left is a fast, native chat client with your own API keys.
 | | |
 |---|---|
 | **Chats** | Stored in `~/Library/Application Support/Parley/chats`. No project folders. |
-| **Providers** | Bring your own API key — same provider setup as upstream. |
+| **Providers** | Bring your own API key — same provider setup as upstream. OpenCode Zen's free tier does **not** work here: it is restricted to the real OpenCode app. |
 | **Themes & sounds** | Inherited from upstream, unchanged. |
 | **Telemetry** | None. Error reporting is opt-in via env vars and off by default. |
 
 ## Status
 
-Early. Phases 1–3 of the plan are done; see [PLAN.md](PLAN.md) for what has landed
-and what is still open. There is no packaged release yet — run it from source.
+Early, but it runs. See [PLAN.md](PLAN.md) for what has landed and what is still open.
+
+## Install
+
+Builds are **unsigned** — Parley has no Apple Developer ID yet. macOS will refuse to
+open the app on a double-click and say it is damaged or from an unidentified developer.
+That warning is expected for an unsigned build, not a sign anything is wrong.
+
+To open it the first time, either right-click the app and choose **Open**, or clear the
+quarantine flag:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/Parley.app
+```
+
+Only do that for a build you produced yourself or otherwise trust.
+
+## Build it yourself
+
+```bash
+bun install
+OPENCODE_CHANNEL=prod bun run --cwd packages/desktop build
+OPENCODE_CHANNEL=prod bun run --cwd packages/desktop package:mac
+```
+
+The `.dmg` and `.zip` land in `packages/desktop/dist/`. Signing and notarization turn on
+automatically when signing material is present in the environment (`CSC_LINK`, `CSC_NAME`
+or `APPLE_TEAM_ID`), so a machine with a certificate produces a signed build from the
+same command.
 
 ## Running from source
 

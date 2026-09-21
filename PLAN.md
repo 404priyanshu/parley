@@ -315,11 +315,40 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
   not upstream either). Linux packaging only.
 - Pre-existing chats and settings do not migrate to the new bundle id.
 
-### Phase 4 — ship
+### Phase 4 — ship 🟡 partly done
 
-- [ ] Signed + notarized `.dmg` (`bun run --cwd packages/desktop package:mac`).
-- [ ] GitHub release on `404priyanshu/parley`.
-- [ ] README with demo GIF.
+- [x] **Unsigned `.dmg` builds and runs.** `OPENCODE_CHANNEL=prod` produces
+      `parley-mac-arm64.dmg` (205 MB) plus a `.zip`. The dmg mounts with `Parley.app` and
+      the Applications symlink; the bundle reports `co.parley.desktop` / "Parley" /
+      `parley://` with the new icon, launches, and stores data under `co.parley.desktop`.
+- [x] Signing gated on `CSC_LINK` / `CSC_NAME` / `APPLE_TEAM_ID` being present, so a
+      certificate-less machine gets a working unsigned build instead of a notarize
+      failure, and a machine that has one still signs.
+- [x] `main-parley` pushed to `404priyanshu/parley`. The `upstream` push URL is now
+      `DISABLED` so nothing can land on `anomalyco/opencode` by accident.
+- [x] README: install instructions covering the Gatekeeper warning unsigned builds
+      produce, and how to build one yourself.
+- [ ] **Signed + notarized build.** Blocked: needs an Apple Developer Program membership
+      and a Developer ID Application certificate. None exists on this machine
+      (`security find-identity` → 0 valid identities). Nothing else is in the way — the
+      config already turns signing on when the certificate is there.
+- [ ] **GitHub release.** Not cut; the branch is pushed but nothing is tagged or
+      published. The fork is public, so a release is visible to anyone.
+- [ ] **Demo GIF.** Not produced. A useful one needs a clean packaged window with a
+      working provider; the available captures showed either the dev build's DEV badge
+      and perf bar, or a provider error, and neither belongs in a README.
+
+**Found while packaging**
+
+- `main/index.ts` carried a *second* `APP_IDS` map, separate from the electron-builder
+  one, driving `userData` and the app user model id — the packaged app was still storing
+  everything under `ai.opencode.desktop`. Both maps now agree.
+- `migrate.ts` imported data from `~/Library/Application Support/ai.opencode.*`, which is
+  the real OpenCode's directory. In a fork that means silently absorbing another
+  application's settings on first launch. Disabled.
+- **OpenCode Zen's free tier is gated to the real OpenCode app** — it returns
+  "OpenCode's free tier can only be used from within OpenCode". Parley needs the user's
+  own provider API key; noted in the README.
 
 ---
 
