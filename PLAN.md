@@ -248,19 +248,71 @@ live DOM of the running app over the Electron debug port. Two consequences:
 - The shell-mode removal was verified at source and in the vite-served modules, not in
   the live palette — synthetic key events do not drive the palette widget.
 
-### Phase 3 — rebrand
+### Phase 3 — rebrand ✅ mostly done
 
-- [ ] Name, icon, bundle ID: `packages/desktop/electron-builder.config.ts`
-      (`APP_IDS` = `ai.opencode.desktop{,.dev,.beta}` → `co.parley.desktop…`,
-      `productName`, `artifactName`, `executableName`), `packages/desktop/icons/*`,
-      `packages/desktop/scripts/copy-icons.ts`, `packages/identity/*`.
-- [ ] Window titles / menus: `packages/desktop/src/main/menu.ts`, `windows.ts`,
-      `packages/app/src/i18n/*`.
-- [ ] README note: fork of OpenCode, link upstream, **not affiliated or endorsed**.
-      Keep upstream `LICENSE` + add `NOTICE`.
-- [ ] Strip upstream-specific telemetry/updater endpoints (Sentry DSN,
-      `packages/desktop/src/main/updater*.ts`) — do not phone home to OpenCode.
-- [ ] New features: per-chat system prompts, chat search, export, pinned chats.
+**Identity** — the fork never claims OpenCode's identity and never pulls its builds.
+
+| | |
+|---|---|
+| Bundle ids | `ai.opencode.desktop*` → `co.parley.desktop*` |
+| Product name | Parley / Parley Dev / Parley Beta |
+| Artifacts | `parley-${os}-${arch}.${ext}` |
+| URL scheme | `opencode://` → `parley://`. Registering `opencode` would have hijacked the real OpenCode's deep links whenever both apps were installed. |
+| Update feed | `anomalyco/opencode` → `404priyanshu/parley` |
+| Window title | Parley |
+
+**Artwork** — MIT grants no trademark rights, so no upstream brand art is reused. A new
+icon was drawn for the fork (overlapping speech bubbles on a macOS squircle, with alpha),
+rendered per channel — amber prod, violet beta, blue dev — as all 49 PNGs per channel plus
+`.icns` and a multi-size `.ico`. `wordmark-v2` (upstream's logotype as SVG paths),
+`packages/identity` and the shared favicon set were redrawn too.
+
+**Copy** — "OpenCode" → "Parley" across 125 locale files. **"OpenCode Zen" is a
+third-party provider service, not this app**, so its 58 occurrences are preserved.
+
+**Stopped contacting upstream**
+
+- Notifications no longer fetch `opencode.ai`'s favicon on every notification, which both
+  leaked a request and showed their mark as ours.
+- The startup fetch of `opencode.ai/changelog.json` is disabled — it presented OpenCode's
+  release notes as Parley's. Re-enable by pointing `CHANGELOG_URL` at a Parley feed.
+- Sentry was already env-gated with no hardcoded DSN, so it stays off by default.
+- Links to `opencode.ai/docs` are kept deliberately: they are upstream's docs for the
+  provider and theme configuration Parley inherits unchanged.
+
+**Licensing** — upstream's `LICENSE` retained with the fork's copyright added alongside;
+new `NOTICE` covering attribution and trademarks; `README.md` rewritten to state plainly
+that Parley is not affiliated with or endorsed by OpenCode. 21 translated READMEs
+describing the upstream product were removed.
+
+**Features** — two of the four already existed upstream and survive the Phase 2 trim:
+
+| Feature | Status |
+|---|---|
+| Chat search | Already existed — the home list search. |
+| Export | Already existed — reachable from the palette and `/export`. |
+| Pinned chats | **Built.** Pin from the home list; pinned chats lift to a group at the top however old they are. Local preference, persisted as session ids. |
+| Per-chat system prompts | **Built.** Sent per turn as the prompt's `system` field, which the server already appends to the agent's system prompt; upstream's client compat layer simply never forwarded it. Edited via `session.instructions` / `/instructions`. |
+
+**Verified** — the app runs, window title and wordmark read "Parley", the new icon is in
+place, and **a real chat round-tripped end to end** (`hello` → a conversational reply,
+labelled "Chat"), which confirms Phase 1's chat-only agent works against a live provider.
+`tsgo` clean across app/desktop/ui/session-ui; app suite 733 pass, 1 pre-existing failure.
+
+**Open / carried forward**
+
+- **The home chat list is not confirmed working.** With a real chat present it still read
+  "Nothing here yet". `buildHomeSessionRecords` required every session to belong to a
+  registered project — impossible in a project-less app — and that filter was removed, but
+  the session index is *also* scoped through the focused server context and that path is
+  unverified. **This is the first thing to check next.**
+- Terminology: the UI still says "session", not "chat", in ~185 strings across 65 locales.
+- `resources/opencode-cli` still ships upstream's CLI binary; a chat-only app probably
+  does not need it at all.
+- `wsl/runtime.ts` still installs the real OpenCode CLI on Windows/WSL.
+- `metainfoFpm` references `resources/<appId>.metainfo.xml`, which does not exist (it did
+  not upstream either). Linux packaging only.
+- Pre-existing chats and settings do not migrate to the new bundle id.
 
 ### Phase 4 — ship
 
