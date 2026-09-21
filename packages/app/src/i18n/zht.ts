@@ -732,6 +732,9 @@ export const dict = {
   "home.sessions.empty.description": "建立工作階段以開始使用",
   "home.sessions.group.today": "今天",
   "home.sessions.group.yesterday": "昨天",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "更早",
   "home.providerTip": "連線 75 個以上的提供者，使用 Claude、GPT、Gemini 等其他模型",
 

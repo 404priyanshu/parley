@@ -698,6 +698,9 @@ export const dict = {
   "home.sessions.empty.description": "Začněte vytvořením relace",
   "home.sessions.group.today": "dnes",
   "home.sessions.group.yesterday": "včera",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Starší",
   "home.providerTip":
     "Připojte se k více než 75 poskytovatelům a použijte další modely, včetně Claude, GPT, Gemini atd",

@@ -698,6 +698,9 @@ export const dict = {
   "home.sessions.empty.description": "Stovna eina setu fyri at koma í gongd",
   "home.sessions.group.today": "Í dag",
   "home.sessions.group.yesterday": "Í gjár",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Eldri",
   "home.providerTip":
     "Set teg í samband við 75+ veitarar fyri at brúka onnur modell, eitt nú Claude, GPT, Gemini, osfr.",

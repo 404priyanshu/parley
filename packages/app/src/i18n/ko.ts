@@ -991,6 +991,9 @@ export const dict = {
   "home.sessions.empty.description": "세션을 생성하여 시작하세요",
   "home.sessions.group.today": "오늘",
   "home.sessions.group.yesterday": "어제",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "이전",
   "home.providerTip": "75개 이상의 공급자에 연결하여 Claude, GPT, Gemini 등의 다른 모델을 사용하세요",
 

@@ -697,6 +697,9 @@ export const dict = {
   "home.sessions.empty.description": "برای شروع یک جلسه ایجاد کنید",
   "home.sessions.group.today": "امروز",
   "home.sessions.group.yesterday": "دیروز",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "قدیمی تر",
   "home.providerTip":
     "برای استفاده از مدل‌های دیگر، از جمله Claude، GPT، Gemini و غیره به بیش از 75 ارائه‌دهنده متصل شوید.",

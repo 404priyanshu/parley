@@ -699,6 +699,9 @@ export const dict = {
   "home.sessions.empty.description": "Izveidojiet sesiju, lai sāktu",
   "home.sessions.group.today": "Šodien",
   "home.sessions.group.yesterday": "Vakar",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Vecākas",
   "home.providerTip":
     "Pievienojiet vairāk nekā 75 pakalpojumu sniedzējus, lai izmantotu citus modeļus, tostarp Claude, GPT, Gemini u.c.",

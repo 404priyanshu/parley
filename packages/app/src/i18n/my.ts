@@ -705,6 +705,9 @@ export const dict = {
   "home.sessions.empty.description": "စတင်ရန် စက်ရှင်တစ်ခုကို ဖန်တီးပါ။",
   "home.sessions.group.today": "ယနေ့",
   "home.sessions.group.yesterday": "မနေ့က",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "အသက်ကြီးသည်။",
   "home.providerTip":
     "Claude၊ GPT၊ Gemini စသည်တို့အပါအဝင် အခြားမော်ဒယ်များကို အသုံးပြုရန် 75+ ဝန်ဆောင်မှုပေးသူများထံ ချိတ်ဆက်ပါ။",

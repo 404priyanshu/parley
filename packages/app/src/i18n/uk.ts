@@ -766,6 +766,9 @@ export const dict = {
   "home.sessions.empty.description": "Створіть сесію, щоб почати",
   "home.sessions.group.today": "Сьогодні",
   "home.sessions.group.yesterday": "Учора",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Раніше",
   "home.providerTip":
     "Підключіться до понад 75 провайдерів, щоб використовувати інші моделі, зокрема Claude, GPT, Gemini та інші",

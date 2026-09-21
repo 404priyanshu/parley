@@ -54,6 +54,8 @@ export type HomeSessionsViewProps = {
   onCreateSession: () => void
   onOpenSession: (session: Session, options?: OpenSessionOptions) => void
   onArchiveSession: (session: Session) => Promise<void>
+  isPinned: (sessionID: string) => boolean
+  onTogglePin: (sessionID: string) => void
   onSetHoverTarget: (element: HTMLElement) => void
   onSetThumbTrack: (element: HTMLDivElement) => void
   onSetContent: (element: HTMLDivElement) => void
@@ -453,6 +455,42 @@ function HomeSessionRow(props: HomeSessionsViewProps & { record: HomeSessionReco
           <HomeSessionProjectName name={props.record.projectName} />
         </Show>
       </button>
+      <div
+        classList={{
+          "absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1 transition-opacity": true,
+          "opacity-100": props.isPinned(props.record.session.id),
+          "opacity-0 group-hover/session:opacity-100 focus-within:opacity-100": !props.isPinned(
+            props.record.session.id,
+          ),
+        }}
+      >
+        <TooltipV2
+          class="flex shrink-0 items-center"
+          placement="bottom"
+          value={
+            props.isPinned(props.record.session.id)
+              ? props.language.t("home.sessions.unpin")
+              : props.language.t("home.sessions.pin")
+          }
+        >
+          <IconButtonV2
+            data-action="home-session-pin"
+            variant="ghost-muted"
+            size="large"
+            icon={<IconV2 name={props.isPinned(props.record.session.id) ? "pin-filled" : "pin"} />}
+            aria-label={
+              props.isPinned(props.record.session.id)
+                ? props.language.t("home.sessions.unpin")
+                : props.language.t("home.sessions.pin")
+            }
+            onClick={(event) => {
+              event.preventDefault()
+              event.stopPropagation()
+              props.onTogglePin(props.record.session.id)
+            }}
+          />
+        </TooltipV2>
+      </div>
       <Show when={SHOW_HOME_SESSION_ARCHIVE}>
         <div
           class={`

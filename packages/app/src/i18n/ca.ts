@@ -703,6 +703,9 @@ export const dict = {
   "home.sessions.empty.description": "Crea una sessió per començar",
   "home.sessions.group.today": "Avui",
   "home.sessions.group.yesterday": "Ahir",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Més vell",
   "home.providerTip":
     "Connecteu-vos a més de 75 proveïdors per utilitzar altres models, inclosos Claude, GPT, Gemini, etc.",

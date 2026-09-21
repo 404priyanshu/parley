@@ -699,6 +699,9 @@ export const dict = {
   "home.sessions.empty.description": "Креирајте сесију да бисте започели",
   "home.sessions.group.today": "Данас",
   "home.sessions.group.yesterday": "јуче",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "старији",
   "home.providerTip":
     "Повежите се са 75+ провајдера да бисте користили друге моделе, укључујући Claude, GPT, Gemini итд",

@@ -702,6 +702,9 @@ export const dict = {
   "home.sessions.empty.description": "Ստեղծեք նիստ՝ սկսելու համար",
   "home.sessions.group.today": "Այսօր",
   "home.sessions.group.yesterday": "Երեկ",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Հին",
   "home.providerTip":
     "Միացեք 75+ մատակարարների՝ այլ մոդելներ օգտագործելու համար, այդ թվում՝ Claude, GPT, Gemini և այլն",

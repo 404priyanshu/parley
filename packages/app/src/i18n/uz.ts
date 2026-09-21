@@ -701,6 +701,9 @@ export const dict = {
   "home.sessions.empty.description": "Boshlash uchun sessiya yarating",
   "home.sessions.group.today": "Bugun",
   "home.sessions.group.yesterday": "Kecha",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Kattaroq",
   "home.providerTip":
     "Claude, GPT, Gemini va boshqalar kabi boshqa modellardan foydalanish uchun 75 dan ortiq provayderlarga ulaning.",

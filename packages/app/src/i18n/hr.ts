@@ -705,6 +705,9 @@ export const dict = {
   "home.sessions.empty.description": "Izradite sesiju da biste započeli",
   "home.sessions.group.today": "Danas",
   "home.sessions.group.yesterday": "Jučer",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Starije",
   "home.providerTip":
     "Povežite se s više od 75 pružatelja usluga za korištenje drugih modela, uključujući Claude, GPT, Gemini itd.",

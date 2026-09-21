@@ -743,6 +743,9 @@ export const dict = {
   "home.sessions.empty.description": "Kreiraj sesiju za početak",
   "home.sessions.group.today": "Danas",
   "home.sessions.group.yesterday": "Jučer",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Starije",
   "home.providerTip":
     "Poveži se s više od 75 provajdera da koristiš druge modele, uključujući Claude, GPT, Gemini i druge",

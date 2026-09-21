@@ -703,6 +703,9 @@ export const dict = {
   "home.sessions.empty.description": "Създайте сесия, за да започнете",
   "home.sessions.group.today": "Днес",
   "home.sessions.group.yesterday": "Вчера",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "По-стари",
   "home.providerTip":
     "Свържете се с над 75 доставчици, за да използвате други модели, включително Claude, GPT, Gemini и т.н.",

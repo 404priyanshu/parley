@@ -662,6 +662,9 @@ export const dict = {
   "home.sessions.empty.description": "Create a session to get started",
   "home.sessions.group.today": "Today",
   "home.sessions.group.yesterday": "Yesterday",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Older",
   "home.providerTip": "Connect to 75+ providers to use other models, including Claude, GPT, Gemini, etc",
 

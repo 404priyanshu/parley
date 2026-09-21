@@ -703,6 +703,9 @@ export const dict = {
   "home.sessions.empty.description": "Эхлэхийн тулд сесс үүсгэ",
   "home.sessions.group.today": "Өнөөдөр",
   "home.sessions.group.yesterday": "Өчигдөр",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Хуучин",
   "home.providerTip":
     "Claude, GPT, Gemini гэх мэт бусад загваруудыг ашиглахын тулд 75+ үйлчилгээ үзүүлэгчтэй холбогдоно уу.",

@@ -748,6 +748,9 @@ export const dict = {
   "home.sessions.empty.description": "Başlamak için bir oturum oluşturun",
   "home.sessions.group.today": "Bugün",
   "home.sessions.group.yesterday": "Dün",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Daha eski",
   "home.providerTip": "Claude, GPT, Gemini ve diğer modelleri kullanmak için 75'ten fazla sağlayıcıya bağlanın",
 

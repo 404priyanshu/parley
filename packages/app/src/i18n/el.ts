@@ -704,6 +704,9 @@ export const dict = {
   "home.sessions.empty.description": "Δημιουργήστε μια περίοδο λειτουργίας για να ξεκινήσετε",
   "home.sessions.group.today": "Σήμερα",
   "home.sessions.group.yesterday": "Χθες",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Παλαιότερο",
   "home.providerTip":
     "Συνδεθείτε σε 75+ παρόχους για να χρησιμοποιήσετε άλλα μοντέλα, συμπεριλαμβανομένων των Claude, GPT, Gemini, κ.λπ.",

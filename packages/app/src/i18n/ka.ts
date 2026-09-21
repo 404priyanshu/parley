@@ -698,6 +698,9 @@ export const dict = {
   "home.sessions.empty.description": "შექმენით სესია დასაწყებად",
   "home.sessions.group.today": "დღეს",
   "home.sessions.group.yesterday": "გუშინ",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "ძველი",
   "home.providerTip":
     "დაკავშირება 75+ პროვაიდერთან სხვა მოდელების გამოსაყენებლად, მათ შორის, Claude, GPT, Gemini და ა.შ.",

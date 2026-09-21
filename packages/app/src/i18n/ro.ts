@@ -698,6 +698,9 @@ export const dict = {
   "home.sessions.empty.description": "Creează o sesiune pentru a începe",
   "home.sessions.group.today": "Astăzi",
   "home.sessions.group.yesterday": "Ieri",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Mai vechi",
   "home.providerTip":
     "Conectează-te la peste 75 de furnizori pentru a folosi alte modele, inclusiv Claude, GPT, Gemini etc.",

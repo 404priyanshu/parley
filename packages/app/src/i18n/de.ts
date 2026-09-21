@@ -583,6 +583,9 @@ export const dict = {
   "home.sessions.empty.description": "Erstellen Sie eine Sitzung, um loszulegen",
   "home.sessions.group.today": "Heute",
   "home.sessions.group.yesterday": "Gestern",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Älter",
   "home.providerTip":
     "Parley mit über 75 Anbietern verbinden, um weitere Modelle wie Claude, GPT, Gemini und andere zu nutzen",

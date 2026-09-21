@@ -704,6 +704,9 @@ export const dict = {
   "home.sessions.empty.description": "Norėdami pradėti, sukurkite sesiją",
   "home.sessions.group.today": "Šiandien",
   "home.sessions.group.yesterday": "vakar",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Vyresni",
   "home.providerTip":
     "Prisijunkite prie 75 ir daugiau tiekėjų, kad galėtumėte naudoti kitus modelius, įskaitant Claude, GPT, Gemini ir kt.",

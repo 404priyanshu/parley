@@ -746,6 +746,9 @@ export const dict = {
   "home.sessions.empty.description": "Crea una sesión para empezar",
   "home.sessions.group.today": "Hoy",
   "home.sessions.group.yesterday": "Ayer",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Anteriores",
   "home.providerTip":
     "Conéctate a más de 75 proveedores para usar otros modelos, como Claude, GPT, Gemini y muchos más",

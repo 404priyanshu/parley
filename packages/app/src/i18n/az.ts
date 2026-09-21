@@ -707,6 +707,9 @@ export const dict = {
   "home.sessions.empty.description": "Başlamaq üçün sessiya yaradın",
   "home.sessions.group.today": "Bu gün",
   "home.sessions.group.yesterday": "Dünən",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Daha əvvəl",
   "home.providerTip":
     "Claude, GPT, Gemini və s. daxil olmaqla, digər modellərdən istifadə etmək üçün 75+ provayderə qoşulun",

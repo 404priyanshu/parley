@@ -1203,6 +1203,9 @@ export const dict = {
   "home.sessions.empty.description": "Opprett en sesjon for å komme i gang",
   "home.sessions.group.today": "I dag",
   "home.sessions.group.yesterday": "I går",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Eldre",
   "home.providerTip":
     "Koble til over 75 leverandører for å bruke andre modeller, inkludert Claude, GPT, Gemini og flere",

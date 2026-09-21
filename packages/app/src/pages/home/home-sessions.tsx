@@ -27,6 +27,8 @@ export function HomeSessions(props: {
       onCreateSession={props.sessions.session.create}
       onOpenSession={props.sessions.session.open}
       onArchiveSession={props.sessions.session.archive}
+      isPinned={props.sessions.pinned.isPinned}
+      onTogglePin={props.sessions.pinned.toggle}
       onSetHoverTarget={props.scroll.viewport.setHoverTarget}
       onSetThumbTrack={props.scroll.viewport.setThumbTrack}
       onSetContent={props.scroll.header.setContent}

@@ -696,6 +696,9 @@ export const dict = {
   "home.sessions.empty.description": "Vytvorte reláciu pre začiatok",
   "home.sessions.group.today": "Dnes",
   "home.sessions.group.yesterday": "Včera",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Staršie",
   "home.providerTip":
     "Pripojte sa k viac ako 75 poskytovateľom a používajte ďalšie modely, vrátane Claude, GPT, Gemini a ďalších",

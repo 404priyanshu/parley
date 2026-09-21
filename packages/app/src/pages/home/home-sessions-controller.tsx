@@ -21,6 +21,8 @@ import { pathKey } from "@/utils/path-key"
 import { showToast } from "@/utils/toast"
 import { Binary } from "@opencode-ai/core/util/binary"
 import { archiveHomeSession } from "../home-session-archive"
+import { groupSessions } from "./home-session-groups"
+import { createHomePinnedController } from "./home-pinned"
 import type { HomeController } from "./home-controller"
 
 const HOME_SESSION_LIMIT = 64
@@ -31,7 +33,7 @@ export type HomeSessionRecord = {
 }
 
 export type HomeSessionGroup = {
-  id: "today" | "yesterday" | "older"
+  id: "pinned" | "today" | "yesterday" | "older"
   title: string
   sessions: HomeSessionRecord[]
 }
@@ -95,7 +97,8 @@ export function createHomeSessionsController(home: HomeController) {
     }),
   )
   const records = createMemo(() => allRecords().slice(0, HOME_SESSION_LIMIT))
-  const groups = createMemo(() => groupSessions(records(), language))
+  const pinned = createHomePinnedController()
+  const groups = createMemo(() => groupSessions(records(), language, pinned.ids()))
   const prefetched = new Set<string>()
 
   createEffect(() => {
@@ -172,6 +175,10 @@ export function createHomeSessionsController(home: HomeController) {
       groups,
       loading: () => sessionLoad.isLoading,
       searchRecords: allRecords,
+    },
+    pinned: {
+      isPinned: pinned.isPinned,
+      toggle: pinned.toggle,
     },
     session: {
       showProjectName: () => !home.project.selected(),
@@ -273,30 +280,6 @@ function buildHomeSessionRecords(input: {
 
 export function homeSessionSearchKey(record: HomeSessionRecord) {
   return `${pathKey(record.session.directory)}:${record.session.id}`
-}
-
-function groupSessions(records: HomeSessionRecord[], language: ReturnType<typeof useLanguage>): HomeSessionGroup[] {
-  const now = DateTime.local()
-  const yesterday = now.minus({ days: 1 })
-  const todaySessions = records.filter((record) =>
-    DateTime.fromMillis(record.session.time.updated ?? record.session.time.created).hasSame(now, "day"),
-  )
-  const yesterdaySessions = records.filter((record) =>
-    DateTime.fromMillis(record.session.time.updated ?? record.session.time.created).hasSame(yesterday, "day"),
-  )
-  const olderSessions = records.filter((record) => {
-    const time = DateTime.fromMillis(record.session.time.updated ?? record.session.time.created)
-    return !time.hasSame(now, "day") && !time.hasSame(yesterday, "day")
-  })
-  const olderTitle =
-    todaySessions.length === 0 && yesterdaySessions.length === 0
-      ? language.t("sidebar.project.recentSessions")
-      : language.t("home.sessions.group.older")
-  return [
-    { id: "today" as const, title: language.t("home.sessions.group.today"), sessions: todaySessions },
-    { id: "yesterday" as const, title: language.t("home.sessions.group.yesterday"), sessions: yesterdaySessions },
-    { id: "older" as const, title: olderTitle, sessions: olderSessions },
-  ].filter((group) => group.sessions.length > 0)
 }
 
 export type HomeSessionsController = ReturnType<typeof createHomeSessionsController>

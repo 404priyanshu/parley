@@ -707,6 +707,9 @@ export const dict = {
   "home.sessions.empty.description": "شروع کرن لئی اک سیشن بناؤ",
   "home.sessions.group.today": "آج",
   "home.sessions.group.yesterday": "کل",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "پرانا",
   "home.providerTip":
     "دوجے ماڈل استعمال کرن لئی 75+ فراہم کرن آلیاں نال جڑو، جنہاں چ Claude، GPT، Gemini، وغیرہ شامل نیں",

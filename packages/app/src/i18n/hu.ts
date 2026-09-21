@@ -703,6 +703,9 @@ export const dict = {
   "home.sessions.empty.description": "A kezdéshez hozzon létre egy munkamenetet",
   "home.sessions.group.today": "Ma",
   "home.sessions.group.yesterday": "Tegnap",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Régebbi",
   "home.providerTip":
     "Csatlakozzon 75+ szolgáltatóhoz más modellek használatához, beleértve a Claude, GPT, Gemini stb.",

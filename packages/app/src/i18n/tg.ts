@@ -700,6 +700,9 @@ export const dict = {
   "home.sessions.empty.description": "Барои оғоз кардани сессия сессия эҷод кунед",
   "home.sessions.group.today": "Имруз",
   "home.sessions.group.yesterday": "Дируз",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "калонсолтар",
   "home.providerTip":
     "Барои истифодаи моделҳои дигар, аз ҷумла Claude, GPT, Gemini ва ғайра ба 75+ провайдерҳо пайваст шавед",

@@ -761,6 +761,9 @@ export const dict = {
   "home.sessions.empty.description": "Buat sesi untuk memulai",
   "home.sessions.group.today": "Hari ini",
   "home.sessions.group.yesterday": "Kemarin",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Lebih lama",
   "home.providerTip":
     "Hubungkan ke 75+ penyedia untuk menggunakan model lain, termasuk Claude, GPT, Gemini, dan lainnya",

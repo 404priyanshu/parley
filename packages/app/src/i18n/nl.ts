@@ -705,6 +705,9 @@ export const dict = {
   "home.sessions.empty.description": "Maak een sessie aan om aan de slag te gaan",
   "home.sessions.group.today": "Vandaag",
   "home.sessions.group.yesterday": "Gisteren",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "Ouder",
   "home.providerTip":
     "Maak verbinding met meer dan 75 providers om andere modellen te gebruiken, waaronder Claude, GPT, Gemini, enz.",

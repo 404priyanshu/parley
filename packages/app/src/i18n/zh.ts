@@ -737,6 +737,9 @@ export const dict = {
   "home.sessions.empty.description": "创建一个会话以开始。",
   "home.sessions.group.today": "今天",
   "home.sessions.group.yesterday": "昨天",
+  "home.sessions.group.pinned": "Pinned",
+  "home.sessions.pin": "Pin chat",
+  "home.sessions.unpin": "Unpin chat",
   "home.sessions.group.older": "更早",
   "home.providerTip": "连接 75 个以上的提供商，使用包括 Claude、GPT、Gemini 在内的更多模型",
 
