@@ -419,14 +419,9 @@ export function usePromptInputV2Controller(props: PromptInputV2ControllerProps):
       disabled: controller.state.mode !== "normal",
       onSelect: () => controller.attach(),
     },
-    {
-      id: "prompt.mode.shell",
-      title: language.t("command.prompt.mode.shell"),
-      category: language.t("command.category.session"),
-      keybind: "mod+shift+x",
-      disabled: controller.state.mode === "shell",
-      onSelect: () => controller.dispatch({ type: "mode.shell" }),
-    },
+    // Chat-only fork: shell mode is gone. It ran the composer's input through
+    // the bash tool, which Phase 1 removed, so the command and its Mod+Shift+X
+    // keybind would have sat in the palette doing nothing.
     {
       id: "prompt.mode.normal",
       title: language.t("command.prompt.mode.normal"),

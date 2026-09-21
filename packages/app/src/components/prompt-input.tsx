@@ -439,7 +439,6 @@ export const PromptInput: Component<PromptInputProps> = (props) => {
     requestAnimationFrame(() => editorRef?.focus())
   }
 
-  const shellModeKey = "mod+shift+x"
   const normalModeKey = "mod+shift+e"
 
   command.register("prompt-input", () => [
@@ -451,14 +450,7 @@ export const PromptInput: Component<PromptInputProps> = (props) => {
       disabled: store.mode !== "normal",
       onSelect: pick,
     },
-    {
-      id: "prompt.mode.shell",
-      title: language.t("command.prompt.mode.shell"),
-      category: language.t("command.category.session"),
-      keybind: shellModeKey,
-      disabled: store.mode === "shell",
-      onSelect: () => setMode("shell"),
-    },
+    // Chat-only fork: shell mode is gone — it drove the bash tool.
     {
       id: "prompt.mode.normal",
       title: language.t("command.prompt.mode.normal"),

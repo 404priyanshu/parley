@@ -210,11 +210,9 @@ export function PromptInputV2(props: PromptInputV2Props) {
               attachShortcut={props.attachShortcut ?? "Mod+U"}
               commandsLabel={i18n.t("ui.promptInput.commands")}
               contextLabel={i18n.t("ui.promptInput.context")}
-              shellLabel={i18n.t("ui.promptInput.shell")}
               onAttach={props.controller.attach}
               onCommands={props.controller.openCommands}
               onContext={props.controller.openContext}
-              onShell={props.controller.openShell}
             />
             {/*
               Chat-only fork: the agent switcher is gone. There is exactly one
@@ -470,11 +468,9 @@ export function PromptInputV2AddMenu(props: {
   attachShortcut?: string
   commandsLabel: string
   contextLabel: string
-  shellLabel: string
   onAttach: () => void
   onCommands: () => void
   onContext: () => void
-  onShell: () => void
 }) {
   return (
     <TooltipV2
@@ -509,9 +505,7 @@ export function PromptInputV2AddMenu(props: {
             <MenuV2.Item onSelect={props.onContext} shortcut="@">
               {props.contextLabel}
             </MenuV2.Item>
-            <MenuV2.Item onSelect={props.onShell} shortcut="!">
-              {props.shellLabel}
-            </MenuV2.Item>
+            {/* Chat-only fork: the shell entry is gone — it drove the bash tool. */}
           </MenuV2.Content>
         </MenuV2.Portal>
       </MenuV2>
