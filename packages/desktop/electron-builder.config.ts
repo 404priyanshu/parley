@@ -31,6 +31,14 @@ const channel = (() => {
 
 // Parley is an independent fork. Its bundle ids, protocol scheme and update feed
 // are its own — it must never claim OpenCode's identity or pull OpenCode's builds.
+// Parley has no Apple Developer ID of its own yet. Signing and notarization are
+// enabled only when signing material is actually present in the environment, so
+// a local `package:mac` produces a working (unsigned) .dmg instead of failing,
+// while a machine or CI runner that does have a certificate still signs.
+const signingAvailable = Boolean(
+  process.env.CSC_LINK || process.env.CSC_NAME || process.env.CSC_KEY_PASSWORD || process.env.APPLE_TEAM_ID,
+)
+
 const APP_IDS = {
   dev: "co.parley.desktop.dev",
   beta: "co.parley.desktop.beta",
@@ -71,15 +79,16 @@ const getBase = (appId: string): Configuration => ({
   mac: {
     category: "public.app-category.developer-tools",
     icon: `resources/icons/icon.icns`,
-    hardenedRuntime: true,
+    hardenedRuntime: signingAvailable,
     gatekeeperAssess: false,
     entitlements: "resources/entitlements.plist",
     entitlementsInherit: "resources/entitlements.plist",
-    notarize: true,
+    notarize: signingAvailable,
+    ...(signingAvailable ? {} : { identity: null }),
     target: ["dmg", "zip"],
   },
   dmg: {
-    sign: true,
+    sign: signingAvailable,
   },
   protocols: {
     name: "Parley",

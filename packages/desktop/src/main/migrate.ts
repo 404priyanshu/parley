@@ -66,7 +66,21 @@ function migrateFile(datPath: string, filename: string) {
   log.log("tauri migration: migrated", filename, "→", storeName, { migrated, skipped })
 }
 
+/**
+ * Chat-only fork: the Tauri migration is disabled.
+ *
+ * Upstream used this to carry a user's data over from the old Tauri-based
+ * OpenCode app. Those directories (~/Library/Application Support/ai.opencode.*)
+ * belong to the real OpenCode, so running it here would have Parley silently
+ * absorb another application's settings on first launch. Parley starts clean.
+ */
+const TAURI_MIGRATION_ENABLED: boolean = false
+
 export function migrate() {
+  if (!TAURI_MIGRATION_ENABLED) {
+    log.log("tauri migration: disabled in this fork")
+    return
+  }
   if (getStore().get(TAURI_MIGRATED_KEY)) {
     log.log("tauri migration: already done, skipping")
     return
