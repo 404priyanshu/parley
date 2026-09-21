@@ -37,6 +37,25 @@ const withCategory = (category: string) => {
   })
 }
 
+/**
+ * Chat-only fork: commands for the panels Parley no longer has.
+ *
+ * The panels themselves are gated off in `pages/session.tsx`, which would leave
+ * these entries in the command palette and on their keybinds silently doing
+ * nothing. They are filtered out at registration rather than deleted from their
+ * groups, so upstream rebases stay cheap.
+ */
+const REMOVED_COMMANDS = new Set([
+  "terminal.toggle",
+  "terminal.close",
+  "terminal.new",
+  "review.toggle",
+  "fileTree.toggle",
+  "file.open",
+  "tab.close",
+  "context.addSelection",
+])
+
 export const useSessionCommands = (actions: SessionCommandContext) => {
   const command = useCommand()
   const dialog = useDialog()
@@ -643,15 +662,17 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
     }),
   ]
 
-  command.register("session", () => [
-    ...sessionCmds(),
-    ...shareCmds(),
-    ...fileCmds(),
-    ...contextCmds(),
-    ...viewCmds(),
-    ...terminalCmds(),
-    ...messageCmds(),
-    ...mcpCmds(),
-    ...permissionsCmds(),
-  ])
+  command.register("session", () =>
+    [
+      ...sessionCmds(),
+      ...shareCmds(),
+      ...fileCmds(),
+      ...contextCmds(),
+      ...viewCmds(),
+      ...terminalCmds(),
+      ...messageCmds(),
+      ...mcpCmds(),
+      ...permissionsCmds(),
+    ].filter((item) => !REMOVED_COMMANDS.has(item.id)),
+  )
 }

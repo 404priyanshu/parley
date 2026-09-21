@@ -2,7 +2,6 @@ import { ScrollView } from "@opencode-ai/ui/scroll-view"
 import { createHomeController } from "./home/home-controller"
 import { createHomeProjectsController } from "./home/home-projects-controller"
 import { HomeUtilityNav } from "./home/home-projects-view"
-import { HomeProjects } from "./home/home-projects"
 import { createHomeScrollController } from "./home/home-scroll-controller"
 import { createHomeSessionSearchController } from "./home/home-session-search-controller"
 import { createHomeSessionsController } from "./home/home-sessions-controller"
@@ -29,16 +28,22 @@ export function NewHome() {
         onScroll={(event) => scroll.viewport.update(event.currentTarget.scrollTop)}
         onWheel={scroll.viewport.containOuterWheel}
       >
+        {/*
+          Chat-only fork: the 280px projects sidebar is gone, so the grid is a
+          single centred column of chats. The utility nav (settings, help) used
+          to live inside that sidebar on desktop and only appeared here below
+          `lg`, so it is now shown at every width — it is the only route to
+          provider and API-key settings.
+        */}
         <div
           class={`
-            mx-auto grid min-h-full w-full max-w-[1080px] grid-rows-[auto_minmax(0,1fr)_auto] gap-4 px-3
-            lg:grid-cols-[280px_minmax(0,720px)] lg:grid-rows-1 lg:gap-8 lg:px-6
+            mx-auto grid min-h-full w-full max-w-[720px] grid-rows-[minmax(0,1fr)_auto] gap-4 px-3
+            lg:gap-8 lg:px-6
           `}
         >
-          <HomeProjects projects={projects} scroll={scroll} />
           <HomeSessions sessions={sessions} search={search} scroll={scroll} />
           <HomeUtilityNav
-            class="flex lg:hidden"
+            class="flex"
             onOpenSettings={projects.utility.settings}
             onOpenHelp={projects.utility.help}
             language={projects.copy.language}

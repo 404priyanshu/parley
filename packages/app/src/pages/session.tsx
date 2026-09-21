@@ -106,6 +106,15 @@ import { createSessionLineage } from "./session/session-lineage"
 
 type FollowupItem = FollowupDraft & { id: string }
 type FollowupEdit = Pick<FollowupItem, "id" | "prompt" | "context">
+/**
+ * Chat-only fork: side panels are disabled.
+ *
+ * Covers the diff/review pane, the file tree / file browser and the terminal.
+ * Typed as `boolean` so TypeScript does not narrow the guards to `false` and
+ * flag the upstream code paths below as unreachable.
+ */
+const PANES_ENABLED: boolean = false
+
 const emptyFollowups: FollowupItem[] = []
 
 type ChangeMode = "git" | "branch" | "turn"
@@ -447,15 +456,22 @@ export default function Page() {
 
   const isDesktop = createMediaQuery("(min-width: 768px)")
   const size = createSizing()
-  const desktopReviewOpen = createMemo(() => isDesktop() && view().reviewPanel.opened())
+  // Chat-only fork: the review/diff pane, file tree and terminal are gone.
+  // These three memos are the roots every panel visibility signal derives from
+  // (desktopV2ReviewOpen, desktopSidePanelOpen, desktopV2PanelLayout,
+  // splitReview, sessionPanelWidth ...), so forcing them false collapses every
+  // <Show> that mounts those panels and leaves the chat column full width.
+  // Gating here rather than deleting the JSX keeps upstream rebases cheap.
+  const desktopReviewOpen = createMemo(() => PANES_ENABLED && isDesktop() && view().reviewPanel.opened())
   const desktopV2ReviewOpen = createMemo(() => newSessionDesign() && desktopReviewOpen() && !!params.id)
-  const terminalOpen = createMemo(() => view().terminal.opened())
+  const terminalOpen = createMemo(() => PANES_ENABLED && view().terminal.opened())
   const desktopTerminalOpen = createMemo(() => isDesktop() && terminalOpen())
   const desktopInlineTerminalOnlyOpen = createMemo(
     () => newSessionDesign() && desktopTerminalOpen() && !desktopV2ReviewOpen(),
   )
   const desktopFileTreeOpen = createMemo(
     () =>
+      PANES_ENABLED &&
       isDesktop() &&
       shouldShowFileTree({
         visible: settings.visibility.fileTree(),

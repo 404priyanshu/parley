@@ -1,4 +1,3 @@
-import { createPromptProjectController } from "@/components/prompt-project-selector"
 import { useTitlebarRightMount } from "@/components/titlebar"
 import { useSettings } from "@/context/settings"
 import { createEffect, createResource } from "solid-js"
@@ -16,17 +15,7 @@ export default function NewSessionPage() {
     worktree: workspace.selection.value,
     resetWorktree: workspace.selection.reset,
   })
-  const project = createPromptProjectController({
-    controls: draft.project.controls,
-    onDone: draft.input.restoreFocus,
-  })
-  useNewSessionCommands({
-    restoreFocus: draft.input.restoreFocus,
-    project: {
-      empty: project.empty,
-      open: () => project.setOpen(true),
-    },
-  })
+  useNewSessionCommands({ restoreFocus: draft.input.restoreFocus })
   createEffect(() => {
     if (!draft.prompt.ready()) return
     draft.input.restoreFocus()
@@ -42,7 +31,7 @@ export default function NewSessionPage() {
       {suspendUntilPromptReady()}
       <NewSessionStatus mount={rightMount} visible={settings.visibility.status} />
       <div class="flex-1 min-h-0 flex flex-col gap-2 p-2">
-        <NewSessionView input={draft.input} project={project} workspace={workspace} />
+        <NewSessionView input={draft.input} />
       </div>
     </div>
   )

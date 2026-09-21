@@ -8,12 +8,6 @@ import { createStore } from "solid-js/store"
 import { Portal } from "solid-js/web"
 import createPresence from "solid-presence"
 import { PromptInputV2Composer } from "@/components/prompt-input-v2"
-import { PromptGitStatus, PromptWorkspaceSelector } from "@/components/prompt-workspace-selector"
-import {
-  PromptProjectAddButton,
-  PromptProjectSelector,
-  type PromptProjectController,
-} from "@/components/prompt-project-selector"
 import { StatusPopoverV2 } from "@/components/status-popover"
 import { useLanguage } from "@/context/language"
 import { useSDK } from "@/context/sdk"
@@ -22,15 +16,10 @@ import { useProviders } from "@/hooks/use-providers"
 import { NEW_SESSION_CONTENT_WIDTH } from "@/pages/session/new-session-layout"
 import { Persist, persisted } from "@/utils/persist"
 import type { NewSessionDraftController } from "./new-session-draft-controller"
-import type { NewSessionWorkspaceController } from "./new-session-workspace-controller"
 
 const providerTipDismissalDuration = 30 * 24 * 60 * 60 * 1000
 
-export function NewSessionView(props: {
-  input: NewSessionDraftController["input"]
-  project: PromptProjectController
-  workspace: NewSessionWorkspaceController
-}) {
+export function NewSessionView(props: { input: NewSessionDraftController["input"] }) {
   return (
     <div class="@container relative flex flex-col min-h-0 h-full flex-1">
       <div
@@ -42,29 +31,11 @@ export function NewSessionView(props: {
             <WordmarkV2 class="h-auto w-full text-v2-background-bg-inverse" />
             <div class="mt-8 flex flex-col gap-8">
               <PromptInputV2Composer controller={props.input} />
-              <Show when={props.project.empty()}>
-                <PromptProjectAddButton controller={props.project} />
-              </Show>
-              <Show when={props.project.selected()}>
-                <div class="flex min-h-7 min-w-0 flex-col items-center justify-center gap-0 text-v2-text-text-faint sm:flex-row">
-                  <PromptProjectSelector controller={props.project} placement="bottom" />
-                  <Show
-                    when={props.workspace.bar.visible()}
-                    fallback={
-                      <PromptGitStatus branch={props.workspace.bar.branch()} noGit={!props.workspace.project.git()} />
-                    }
-                  >
-                    <PromptWorkspaceSelector
-                      value={props.workspace.selection.value()}
-                      projectRoot={props.workspace.project.root()}
-                      workspaces={props.workspace.project.workspaces()}
-                      branch={props.workspace.bar.branch()}
-                      onChange={props.workspace.selection.set}
-                      onDone={props.input.restoreFocus}
-                    />
-                  </Show>
-                </div>
-              </Show>
+              {/*
+                Chat-only fork: the project picker, "add project" button, workspace
+                selector and git-status chip used to live here. Parley has no project
+                context, so a new chat starts with nothing to choose.
+              */}
             </div>
           </div>
         </div>
