@@ -2,7 +2,6 @@ import type { Session } from "@opencode-ai/sdk/v2/client"
 import { preloadMarkdown } from "@opencode-ai/session-ui/markdown-cache"
 import { useDialog } from "@opencode-ai/ui/context/dialog"
 import { useQuery } from "@tanstack/solid-query"
-import { DateTime } from "luxon"
 import { type Accessor, createEffect, createMemo, createRoot, type JSX, startTransition } from "solid-js"
 import { produce } from "solid-js/store"
 import { useCommand } from "@/context/command"
@@ -186,7 +185,9 @@ export function createHomeSessionsController(home: HomeController) {
       toggle: pinned.toggle,
     },
     session: {
-      showProjectName: () => !home.project.selected(),
+      // Chat-only fork: every chat lives in the same hidden directory, so the
+      // "project" name is always the same meaningless folder name ("chats").
+      showProjectName: () => false,
       server: () => home.selection.value().server,
       canCreate: () => !!home.project.newSession(),
       create: home.project.openNewSession,
