@@ -4,6 +4,10 @@
 <p align="center"><strong>Parley</strong></p>
 <p align="center">A chat-only desktop app for talking to language models.</p>
 
+<p align="center">
+  <img src="docs/assets/parley-demo.gif" alt="Asking Parley a question and watching the reply render" width="820">
+</p>
+
 ---
 
 > [!IMPORTANT]

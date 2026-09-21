@@ -348,9 +348,14 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
         versions by fetching opencode-ai from npm — it reads the root `package.json`.
       - The `.blockmap` files are now uploaded too, so differential updates can work
         rather than pulling a full ~150 MB each time.
-- [ ] **Demo GIF.** Not produced. A useful one needs a clean packaged window with a
-      working provider; the available captures showed either the dev build's DEV badge
-      and perf bar, or a provider error, and neither belongs in a README.
+- [x] **Demo GIF** — `docs/assets/parley-demo.gif`, shown at the top of the README.
+      6.3s, 285 KB: the empty new-chat screen, a question typed and sent, and the reply
+      rendering with a markdown table. Captured by driving the running app over the
+      Electron debug port (CDP `Input.insertText` + `Page.captureScreenshot`), cropped
+      above the tab bar to keep the dev build's DEV badge out, and encoded with ffmpeg
+      through palettegen/paletteuse. The recipe is worth reusing: capture frames, find
+      the last frame whose hash changes (the response finished well before capture did),
+      trim there and hold the final frame, or two thirds of the GIF is a freeze.
 
 **Found while packaging**
 
