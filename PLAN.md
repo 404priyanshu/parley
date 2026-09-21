@@ -338,9 +338,16 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
       (`c2fc9681107779f627fd0dccce46e675e49e79e017f30afd54104da58a87aa99`).
       Tagged `parley-v0.1.0` rather than `v0.1.0`: the fork inherited upstream's tags, so
       plain semver tags up to `v1.18.31` are already taken. Keep the `parley-` prefix.
-- [ ] **Auto-update.** The release carries only the `.dmg`. electron-updater also needs
-      `latest-mac.yml` and the `.zip` (both are produced in `dist/`), and update payloads
-      must be signed to validate — so updates stay off until there is a certificate.
+- [ ] **Auto-update.** The release now carries `latest-mac.yml` and the `.zip` alongside
+      the `.dmg`, so the feed is complete and internally consistent (manifest hashes and
+      sizes verified against the served assets). Updates still will not *apply*:
+      electron-updater validates the payload's code signature on macOS, and these builds
+      are unsigned. Two further things to know when a certificate arrives:
+      - `latest-mac.yml` reports `version: 1.18.31`, inherited from upstream's version in
+        `package.json`, while the release is tagged `parley-v0.1.0`. Parley needs its own
+        version line before the updater can compare releases meaningfully.
+      - The `.blockmap` files were not uploaded, so differential updates fall back to a
+        full download. They are in `dist/` if wanted.
 - [ ] **Demo GIF.** Not produced. A useful one needs a clean packaged window with a
       working provider; the available captures showed either the dev build's DEV badge
       and perf bar, or a provider error, and neither belongs in a README.
