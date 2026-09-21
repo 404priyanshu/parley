@@ -239,7 +239,9 @@ export function SessionHeader() {
     statusLabel: language.t("status.popover.trigger"),
     reviewLabel: language.t("command.review.toggle"),
     reviewKeybind: reviewTooltipKeybind(command),
-    reviewVisible: isDesktop(),
+    // Chat-only fork: the review pane is gone (PANES_ENABLED in pages/session.tsx),
+    // so its toolbar toggle would be a control that does nothing.
+    reviewVisible: false,
     reviewOpened: view().reviewPanel.opened(),
     onReviewToggle: () => view().reviewPanel.toggle(),
   }))

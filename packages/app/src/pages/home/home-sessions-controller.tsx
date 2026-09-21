@@ -28,7 +28,12 @@ import type { HomeController } from "./home-controller"
 const HOME_SESSION_LIMIT = 64
 export type HomeSessionRecord = {
   session: Session
-  project: LocalProject
+  /**
+   * Chat-only fork: chats live in one fixed directory that is not a registered
+   * project, so most records have no project at all. Downstream consumers
+   * (the avatar, the open handler) already treat it as optional.
+   */
+  project?: LocalProject
   projectName: string
 }
 
@@ -260,11 +265,16 @@ function buildHomeSessionRecords(input: {
   projects: () => LocalProject[]
   projectByID: () => Map<string, LocalProject>
 }) {
-  const directories = new Set(input.projectDirectories().map(pathKey))
-  const sessions = input.sessions().filter((session) => directories.has(pathKey(session.directory)))
+  // Chat-only fork: upstream listed a session only if its directory was a
+  // registered project directory, and dropped any session with no matching
+  // project. Parley's chats all live in one fixed directory that is not a
+  // project, so both filters dropped every chat and left the list empty.
+  // Every session is listed now; the project, when there is one, is only used
+  // for the avatar.
+  const sessions = input.sessions()
   return [...new Map(sessions.map((session) => [session.id, session] as const)).values()]
     .sort(compareSessionTime)
-    .flatMap((session) => {
+    .map((session) => {
       const directory = pathKey(session.directory)
       const project =
         input
@@ -273,8 +283,7 @@ function buildHomeSessionRecords(input: {
             (item) =>
               pathKey(item.worktree) === directory || item.sandboxes?.some((sandbox) => pathKey(sandbox) === directory),
           ) ?? projectForSession(session, input.projects(), input.projectByID())
-      if (!project) return []
-      return { session, project, projectName: displayName(project) }
+      return { session, project, projectName: project ? displayName(project) : "" }
     })
 }
 
