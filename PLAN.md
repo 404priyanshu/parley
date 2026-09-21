@@ -346,8 +346,8 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
       - `latest-mac.yml` reports `version: 1.18.31`, inherited from upstream's version in
         `package.json`, while the release is tagged `parley-v0.1.0`. Parley needs its own
         version line before the updater can compare releases meaningfully.
-      - The `.blockmap` files were not uploaded, so differential updates fall back to a
-        full download. They are in `dist/` if wanted.
+      - The `.blockmap` files are now uploaded too, so differential updates can work
+        rather than pulling a full ~150 MB each time.
 - [ ] **Demo GIF.** Not produced. A useful one needs a clean packaged window with a
       working provider; the available captures showed either the dev build's DEV badge
       and perf bar, or a provider error, and neither belongs in a README.
