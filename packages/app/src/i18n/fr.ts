@@ -186,6 +186,10 @@ export const dict = {
   "command.session.share.description": "Partager cette session et copier l'URL dans le presse-papiers",
   "command.session.unshare": "Ne plus partager la session",
   "command.session.unshare.description": "Arrêter de partager cette session",
+  "dialog.chatInstructions.title": "Chat instructions",
+  "dialog.chatInstructions.description": "Extra instructions for this chat. Sent with every message and added to the model's system prompt. Leave blank for none.",
+  "dialog.chatInstructions.placeholder": "e.g. Answer concisely. Prefer Python examples.",
+  "command.session.instructions": "Chat instructions",
   "command.session.export": "Exporter la session",
   "command.session.export.description": "Exporter la transcription intégrale de la session au format JSON",
 

@@ -95,6 +95,10 @@ export const dict = {
   "command.session.share.description": "Share this session and copy the URL to clipboard",
   "command.session.unshare": "Unshare session",
   "command.session.unshare.description": "Stop sharing this session",
+  "dialog.chatInstructions.title": "Chat instructions",
+  "dialog.chatInstructions.description": "Extra instructions for this chat. Sent with every message and added to the model's system prompt. Leave blank for none.",
+  "dialog.chatInstructions.placeholder": "e.g. Answer concisely. Prefer Python examples.",
+  "command.session.instructions": "Chat instructions",
   "command.session.export": "Export session",
   "command.session.export.description": "Export the full session transcript as JSON",
 

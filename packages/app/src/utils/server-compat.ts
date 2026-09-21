@@ -44,6 +44,12 @@ type LegacyPrompt = {
   model?: { providerID: string; modelID: string }
   variant?: string
   legacyParts?: (TextPartInput | FilePartInput | AgentPartInput)[]
+  /**
+   * Per-chat instructions, appended to the agent's system prompt for this turn.
+   * The server already accepts this on the prompt input; upstream's compat layer
+   * simply never forwarded it.
+   */
+  system?: string
 }
 type LegacyLocation = { directory?: string }
 type CompatibleInput = {
@@ -204,6 +210,7 @@ function createV1Api(input: CompatibleInput): CompatibleApi {
           agent: value.agent,
           model: value.model,
           variant: value.variant,
+          system: value.system,
           parts: value.legacyParts ?? [
             { type: "text", text: value.text },
             ...(value.files ?? []).map((file) => ({

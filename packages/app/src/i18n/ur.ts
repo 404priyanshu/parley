@@ -186,6 +186,10 @@ export const dict = {
   "command.session.share.description": "اس سیشن کا اشتراک کریں اور URL کو کلپ بورڈ میں کاپی کریں۔",
   "command.session.unshare": "سیشن کا اشتراک ختم کریں۔",
   "command.session.unshare.description": "اس سیشن کا اشتراک کرنا بند کریں۔",
+  "dialog.chatInstructions.title": "Chat instructions",
+  "dialog.chatInstructions.description": "Extra instructions for this chat. Sent with every message and added to the model's system prompt. Leave blank for none.",
+  "dialog.chatInstructions.placeholder": "e.g. Answer concisely. Prefer Python examples.",
+  "command.session.instructions": "Chat instructions",
   "command.session.export": "سیشن برآمد کریں",
   "command.session.export.description": "سیشن کی مکمل نقل JSON کی صورت میں برآمد کریں",
 

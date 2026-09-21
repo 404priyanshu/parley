@@ -1,4 +1,5 @@
 import type { Message, Session } from "@opencode-ai/sdk/v2/client"
+import { sessionSystemPrompts } from "@/context/session-system-prompt"
 import { showToast } from "@/utils/toast"
 import { base64Encode } from "@opencode-ai/core/util/encode"
 import { Binary } from "@opencode-ai/core/util/binary"
@@ -168,6 +169,8 @@ export async function sendFollowupDraft(input: FollowupSendInput) {
     await input.api.prompt({
       sessionID: input.draft.sessionID,
       id: messageID,
+      // Per-chat instructions, if the user set any for this chat.
+      system: sessionSystemPrompts.get(input.draft.sessionID),
       agent: input.draft.agent,
       model: input.draft.model,
       variant: input.draft.variant,

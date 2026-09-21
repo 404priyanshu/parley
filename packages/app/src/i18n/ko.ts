@@ -81,6 +81,10 @@ export const dict = {
   "command.session.share.description": "이 세션을 공유하고 URL을 클립보드에 복사",
   "command.session.unshare": "세션 공유 중지",
   "command.session.unshare.description": "이 세션 공유 중지",
+  "dialog.chatInstructions.title": "Chat instructions",
+  "dialog.chatInstructions.description": "Extra instructions for this chat. Sent with every message and added to the model's system prompt. Leave blank for none.",
+  "dialog.chatInstructions.placeholder": "e.g. Answer concisely. Prefer Python examples.",
+  "command.session.instructions": "Chat instructions",
   "command.session.export": "세션 내보내기",
   "command.session.export.description": "전체 세션 기록을 JSON으로 내보내기",
 

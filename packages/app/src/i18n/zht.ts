@@ -195,6 +195,10 @@ export const dict = {
   "command.session.unshare": "取消分享工作階段",
   "command.session.unshare.description": "停止分享此工作階段",
 
+  "dialog.chatInstructions.title": "Chat instructions",
+  "dialog.chatInstructions.description": "Extra instructions for this chat. Sent with every message and added to the model's system prompt. Leave blank for none.",
+  "dialog.chatInstructions.placeholder": "e.g. Answer concisely. Prefer Python examples.",
+  "command.session.instructions": "Chat instructions",
   "command.session.export": "匯出工作階段",
   "command.session.export.description": "將完整的工作階段記錄匯出為 JSON",
 

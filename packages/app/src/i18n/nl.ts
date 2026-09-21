@@ -178,6 +178,10 @@ export const dict = {
   "command.session.share.description": "Deel deze sessie en kopieer de URL naar het klembord",
   "command.session.unshare": "Sessie niet meer delen",
   "command.session.unshare.description": "Stop met het delen van deze sessie",
+  "dialog.chatInstructions.title": "Chat instructions",
+  "dialog.chatInstructions.description": "Extra instructions for this chat. Sent with every message and added to the model's system prompt. Leave blank for none.",
+  "dialog.chatInstructions.placeholder": "e.g. Answer concisely. Prefer Python examples.",
+  "command.session.instructions": "Chat instructions",
   "command.session.export": "Sessie exporteren",
   "command.session.export.description": "Het volledige sessietranscript exporteren als JSON",
 

@@ -511,6 +511,16 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
       onSelect: fork,
     }),
     sessionCommand({
+      id: "session.instructions",
+      title: language.t("command.session.instructions"),
+      slash: "instructions",
+      disabled: !params.id,
+      onSelect: () =>
+        void import("@/components/dialog-chat-instructions").then((x) =>
+          dialog.show(() => <x.DialogChatInstructions />),
+        ),
+    }),
+    sessionCommand({
       id: "session.export",
       title: language.t("command.session.export"),
       description: language.t("command.session.export.description"),

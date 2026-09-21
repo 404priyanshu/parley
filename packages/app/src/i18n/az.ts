@@ -180,6 +180,10 @@ export const dict = {
   "command.session.share.description": "Bu sessiyanı paylaş və URL-ni buferə kopyala",
   "command.session.unshare": "Sessiyanın paylaşımını dayandır",
   "command.session.unshare.description": "Bu sessiyanın paylaşımını dayandır",
+  "dialog.chatInstructions.title": "Chat instructions",
+  "dialog.chatInstructions.description": "Extra instructions for this chat. Sent with every message and added to the model's system prompt. Leave blank for none.",
+  "dialog.chatInstructions.placeholder": "e.g. Answer concisely. Prefer Python examples.",
+  "command.session.instructions": "Chat instructions",
   "command.session.export": "Sessiyanı ixrac et",
   "command.session.export.description": "Sessiyanın tam transkriptini JSON formatında ixrac et",
 
