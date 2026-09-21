@@ -4,10 +4,9 @@
   "version": "1.18.31",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://opencode.ai",
+  "homepage": "https://github.com/404priyanshu/parley",
   "author": {
-    "name": "OpenCode",
-    "email": "hello@opencode.ai"
+    "name": "404priyanshu"
   },
   "scripts": {
     "typecheck": "tsgo -b",

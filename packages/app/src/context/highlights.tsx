@@ -7,7 +7,15 @@ import { useSettings } from "@/context/settings"
 import { persisted } from "@/utils/persist"
 import { DialogReleaseNotes, type Highlight } from "@/components/dialog-release-notes"
 
-const CHANGELOG_URL = "https://opencode.ai/changelog.json"
+/**
+ * Parley has no changelog feed of its own yet.
+ *
+ * Upstream fetched https://opencode.ai/changelog.json on startup and showed the
+ * result as release notes. For a fork that would both call out to OpenCode's
+ * servers on every launch and present their release notes as Parley's, so the
+ * fetch is disabled until there is a Parley feed to point at.
+ */
+const CHANGELOG_URL: string | undefined = undefined
 
 type Store = {
   version?: string
@@ -166,6 +174,11 @@ export const { use: useHighlights, provider: HighlightsProvider } = createSimple
 
     const start = (previous: string) => {
       if (!settings.general.releaseNotes()) {
+        markSeen()
+        return
+      }
+
+      if (!CHANGELOG_URL) {
         markSeen()
         return
       }

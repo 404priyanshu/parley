@@ -70,7 +70,9 @@ const notify: Platform["notify"] = async (title, description, onClick) => {
 
   const notification = new Notification(title, {
     body: description ?? "",
-    icon: "https://opencode.ai/favicon-96x96-v3.png",
+    // Parley does not fetch a remote brand icon for notifications: that reached
+    // out to opencode.ai on every notification and showed their mark as ours.
+    // The OS falls back to the app's own icon.
   })
 
   notification.onclick = () => {

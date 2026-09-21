@@ -1,0 +1,44 @@
+Parley
+Copyright (c) 2026 404priyanshu
+
+This product is a derivative work of OpenCode.
+
+  OpenCode
+  Copyright (c) 2025 opencode
+  https://github.com/anomalyco/opencode
+  Licensed under the MIT License.
+
+The full text of the MIT License covering both the original work and this
+derivative is reproduced in the LICENSE file at the root of this repository,
+as required by that license.
+
+--------------------------------------------------------------------------------
+
+Trademarks
+
+The MIT License grants copyright permissions only; it conveys no rights in
+names, logos or other trademarks. "OpenCode", the OpenCode logo and the OpenCode
+wordmark belong to the upstream project and are not used by Parley.
+
+Parley ships its own name, application icon and wordmark, and registers its own
+macOS/Windows/Linux bundle identifiers (co.parley.desktop*), its own "parley://"
+URL scheme, and its own update feed. It does not present itself as OpenCode and
+is not affiliated with, endorsed by, or supported by the OpenCode project.
+
+--------------------------------------------------------------------------------
+
+Third-party components
+
+This repository retains upstream's vendored license files, which continue to
+apply to their respective subtrees:
+
+  packages/ui/LICENSE
+  packages/docs/LICENSE
+  packages/http-recorder/LICENSE
+
+Bundled Electron and Chromium components remain under their own licenses; see
+the LICENSES.chromium.html shipped inside packaged builds.
+
+"OpenCode Zen" refers to a model-provider service operated by the upstream
+project. Where Parley's interface mentions it, that name is used to identify
+that third-party service and is unchanged.
