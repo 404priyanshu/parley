@@ -180,62 +180,73 @@ upstream migrates. Only the v1 edits affect runtime behaviour right now.
 - `/experimental/tool/ids` reports the *registry*, not the model-facing map. Plugin tools
   can still appear there while `TOOLS_ENABLED` keeps them out of the conversation.
 
-### Phase 2 — trim the UI
+### Phase 2 — trim the UI ✅ mostly done
 
-Remove: file tree, diff/review panes, terminal, project picker, agent switcher.
-Keep: chat, sessions sidebar, model picker, provider/API-key settings, themes, sounds.
-Replace "open project" with "new chat"; all sessions live in a hidden directory at
-`~/Library/Application Support/Parley/chats`.
+Removed: file tree, diff/review panes, terminal, project picker, agent switcher.
+Kept: chat, sessions sidebar, model picker, provider/API-key settings, themes, sounds.
+All chats live in `~/Library/Application Support/Parley/chats`.
 
-The load-bearing problem: routes and sessions are currently keyed by **directory**
-(`/:dir/session/:id`). Phase 2 is mostly about severing that.
+**Correction to the original plan.** The plan's file list was drawn from the legacy
+components. The desktop actually renders the **new layout** —
+`newLayoutDesignsDefault = true` in `context/settings.tsx` — and its v2 components
+(`session-new-design`, `prompt-input-v2`, `project-avatar-v2`), confirmed by reading the
+live DOM of the running app over the Electron debug port. Two consequences:
 
-**Files expected to change**
+- The new layout already routes sessions as `/server/:serverKey/session/:id`, so there
+  was **no `/:dir` coupling to unpick**. `pages/directory-layout.tsx`, `pages/layout.tsx`
+  and the legacy home/session files are not on the live path and were left alone.
+- The work landed in `pages/new-session/*`, `pages/home.tsx`, `pages/session.tsx` and the
+  v2 composer rather than the files originally listed.
 
-*Routing / project coupling*
+**Files changed**
+
 | File | Change |
 |---|---|
-| `packages/app/src/app.tsx` | Routes are `/:dir` → `DirectoryLayout` → `/session/:id`. Collapse to directory-free session routes. |
-| `packages/app/src/pages/directory-layout.tsx` | Directory-scoped layout wrapper — remove. |
-| `packages/app/src/pages/home.tsx`, `pages/home/home-projects*.tsx` | Projects list on the home screen — remove; keep `home-sessions*`. |
-| `packages/app/src/pages/new-session/*`, `pages/new-session.tsx` | "New session in a directory" → "new chat". |
-| `packages/app/src/components/directory-picker.tsx`, `dialog-select-directory{,-v2}.tsx` | Project picker — remove. |
-| `packages/app/src/components/dialog-edit-project{,-v2}.tsx`, `edit-project.ts` | Project management — remove. |
-| `packages/app/src/components/prompt-project-selector.tsx`, `prompt-workspace-selector.tsx` | Project/workspace selectors in the composer — remove. |
+| `app/src/pages/session.tsx` | Diff/review pane, file tree and terminal gated behind `PANES_ENABLED`. Those three memos are the roots every panel visibility signal derives from, so the `<Show>` blocks collapse and chat takes the full width. |
+| `app/src/pages/new-session/new-session-view.tsx` | Project picker, "add project" button, workspace selector and git-status chip removed; props reduced to `input`. |
+| `app/src/pages/new-session.tsx` | Dropped the project controller. |
+| `app/src/pages/home.tsx` | Projects sidebar removed; single centred column of chats. The utility nav (settings, help) lived in that sidebar on desktop and only appeared below `lg`, so it is now shown at every width — it is the only route to provider settings. |
+| `session-ui/src/v2/components/prompt-input/index.tsx` | Agent switcher removed (one agent now); shell menu entry removed. |
+| `app/src/components/prompt-input-v2.tsx`, `prompt-input.tsx` | Shell-mode command and keybind removed — it drove the bash tool. |
+| `app/src/pages/session/use-session-commands.tsx` | `REMOVED_COMMANDS` filters out terminal/review/file-tree/file-picker commands at registration. |
+| `app/src/pages/new-session/use-new-session-commands.tsx` | Dropped `project.select` and the hidden file-picker entry. |
+| `desktop/src/main/chats-directory.ts` | **New.** Resolves and creates the fixed chats dir under Electron's `appData`. Keyed on the name "Parley" rather than the bundle id, so it survives the Phase 3 rebrand. |
+| `desktop/src/main/ipc.ts` | Exposes it over a *synchronous* channel — the preload is sandboxed (`sandbox: true`), so `sendSync` is the only way to have the path before the first draft tab is built. |
+| `desktop/src/preload/{index,types}.ts` | Surfaces `window.api.chatsDirectory`. |
+| `desktop/src/main/onboarding.ts` | First launch opens the chats dir instead of creating `~/Documents/Default Project`. |
+| `app/src/context/tabs.tsx` | `newDraft` is the single chokepoint every new chat goes through; pins them all to the chats dir. Optional-chained so the web build keeps the caller's value. |
+| `app/src/app.tsx` | `window.api.chatsDirectory` added to the `Window` augmentation. |
 
-*Panes to remove*
-| File | Change |
-|---|---|
-| `packages/app/src/components/file-tree.tsx`, `file-tree-v2.tsx` (+ models/tests) | File tree. |
-| `packages/app/src/pages/session/file-tabs.tsx`, `file-tab-scroll.ts` | File tabs. |
-| `packages/app/src/pages/session/review-tab.tsx`, `v2/review-panel-v2*.tsx`, `v2/review-diff-kinds.ts` | Diff/review panes. |
-| `packages/session-ui/src/components/session-review*.tsx`, `session-diff.ts`, `v2/components/session-review*` | Diff/review rendering. |
-| `packages/app/src/components/terminal.tsx`, `pages/session/terminal-panel{,-v2}.tsx`, `terminal-label.ts` | Terminal. |
-| `packages/app/src/components/session/session-sortable-terminal-tab{,-v2}.tsx` | Terminal tabs. |
-| `packages/app/src/pages/session/session-side-panel.tsx`, `session-panel-layout.ts`, `session-panel-width.ts` | Side panel that hosts tree/diff/terminal. |
-| `packages/app/src/components/dialog-select-file.tsx` | File picker. |
-| `packages/app/src/context/local-agent.ts`, `utils/agent.ts` | Agent switcher state. |
-| `packages/app/src/components/dialog-select-mcp.tsx` | MCP picker (tool-related). |
+**Verified** against the running app:
 
-*Keep, but re-point*
-| File | Change |
-|---|---|
-| `packages/app/src/components/settings-providers.tsx`, `settings-models.tsx`, `dialog-select-model.tsx`, `dialog-connect-provider.tsx`, `dialog-custom-provider.tsx` | **Keep** — provider/API-key setup and model picker. |
-| `packages/app/src/components/settings-general.tsx`, `settings-keybinds.tsx`, `settings-dialog.tsx` | **Keep**; prune tool/project rows. |
-| `packages/ui/src/theme/*`, `packages/ui/src/assets/audio/*`, `packages/app/src/utils/sound.ts` | **Keep unchanged** — themes and sounds. |
-| `packages/app/src/components/command-palette.ts`, `dialog-command-palette-v2.tsx` | Prune commands for removed features. |
-| `packages/app/src/components/titlebar*.tsx` | Tab strip/history — retarget from project tabs to chats. |
-| `packages/app/src/pages/session/use-session-commands.tsx`, `use-composer-commands.tsx` | Prune tool/file/terminal commands. |
+- Project row, agent switcher and `project-avatar-v2` gone from the new-chat screen;
+  composer keeps attach, model and model-variant.
+- Home shows only chats plus Settings/Help; the settings dialog still opens with its
+  **Providers** and **Models** tabs.
+- Command palette reduced to Focus input / Open settings / Add files / Choose model —
+  no project, terminal, file-tree or review entries.
+- `window.api.chatsDirectory` resolves to
+  `/Users/<user>/Library/Application Support/Parley/chats`, the directory is created, and
+  a newly created chat persists with that directory.
+- `tsgo` clean for app, session-ui and desktop. session-ui 83/83 tests pass; app 723/724
+  — the one failure (`i18n/desktop-native.test.ts`, Unicode likely-subtags) fails
+  identically with these changes stashed, so it is pre-existing and environmental.
 
-*Storage relocation*
-| File | Change |
-|---|---|
-| `packages/core/src/global.ts` | `const app = "opencode"` drives every XDG data/config/state path. |
-| `packages/core/src/database/database.ts` | DB filename `opencode.db` / `opencode-<channel>.db`. |
-| `packages/core/src/database/path.ts` | `storagePath()` resolution. |
-| `packages/desktop/src/main/sidecar.ts` | Sets `XDG_STATE_HOME` from Electron's `userDataPath`. |
-| `packages/desktop/src/main/index.ts`, `store.ts`, `store-keys.ts` | Electron `userData` location and persisted store. |
-| `packages/core/src/project.ts`, `src/project/*` | Project resolution — pin to one hidden chats dir instead of user-chosen directories. |
+**Not done — carried forward**
+
+- **Terminology.** The UI still says "session", not "chat" (`command.session.new` =
+  "New session"). `en.ts` alone has ~185 occurrences across 65 locale files; that sweep
+  belongs with the Phase 3 rebrand, where the app name changes anyway. "Open project" as
+  an *action* is gone, which was the functional half of this item.
+- **Pre-existing chats do not migrate.** Tabs and sessions recorded before the storage
+  change keep the directory they were created with.
+- **`@` context mentions** remain in the composer. With no files, references or
+  subagents they may now offer little; worth auditing.
+- **Legacy components** (`pages/layout.tsx`, `directory-layout.tsx`, `file-tree.tsx`,
+  `terminal.tsx`, legacy home/session) are dead on the live path but still in the tree.
+  Deleting them is safe cleanup, deferred to keep this phase reviewable.
+- The shell-mode removal was verified at source and in the vite-served modules, not in
+  the live palette — synthetic key events do not drive the palette widget.
 
 ### Phase 3 — rebrand
 
@@ -264,5 +275,7 @@ The load-bearing problem: routes and sessions are currently keyed by **directory
 - ~~Which of `packages/core` (v2) and `packages/opencode` (v1) the desktop actually
   uses.~~ **Answered in Phase 1: v1 is the live path.** Keep this in mind for Phase 2 —
   UI-adjacent server behaviour should be traced in `packages/opencode` first.
-- Many components exist in both `foo.tsx` and `foo-v2.tsx` form behind a flag. Confirm
-  which generation the desktop build actually renders before deleting either.
+- ~~Many components exist in both `foo.tsx` and `foo-v2.tsx` form behind a flag.~~
+  **Answered in Phase 2: the desktop renders the v2 / new-layout generation**
+  (`newLayoutDesignsDefault = true`). The legacy files are dead on the live path and are
+  still in the tree pending cleanup.
