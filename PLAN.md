@@ -335,7 +335,7 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
 - [x] **GitHub release cut**: [`parley-v0.1.0`](https://github.com/404priyanshu/parley/releases/tag/parley-v0.1.0),
       public, with `parley-mac-arm64.dmg` attached. Uploaded asset verified against the
       local build by size and sha256
-      (`c2fc9681107779f627fd0dccce46e675e49e79e017f30afd54104da58a87aa99`).
+      (`e6b64f60ea4e962b898ee37a2ac3e00763c7621dd8366a1ff2138cb2f6ddc6b6`).
       Tagged `parley-v0.1.0` rather than `v0.1.0`: the fork inherited upstream's tags, so
       plain semver tags up to `v1.18.31` are already taken. Keep the `parley-` prefix.
 - [ ] **Auto-update.** The release now carries `latest-mac.yml` and the `.zip` alongside
@@ -343,9 +343,9 @@ labelled "Chat"), which confirms Phase 1's chat-only agent works against a live 
       sizes verified against the served assets). Updates still will not *apply*:
       electron-updater validates the payload's code signature on macOS, and these builds
       are unsigned. Two further things to know when a certificate arrives:
-      - `latest-mac.yml` reports `version: 1.18.31`, inherited from upstream's version in
-        `package.json`, while the release is tagged `parley-v0.1.0`. Parley needs its own
-        version line before the updater can compare releases meaningfully.
+      - ~~`latest-mac.yml` reports upstream's version.~~ Fixed: the fork is versioned
+        `0.1.0` across all 28 packages, and `packages/script` no longer derives release
+        versions by fetching opencode-ai from npm — it reads the root `package.json`.
       - The `.blockmap` files are now uploaded too, so differential updates can work
         rather than pulling a full ~150 MB each time.
 - [ ] **Demo GIF.** Not produced. A useful one needs a clean packaged window with a
